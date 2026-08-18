@@ -61,7 +61,7 @@ public:
 class LampBoard
 {
 public:
-	float InitializeCircles(std::vector<sf::CircleShape>& vector, sf::Vector2f startPosition)
+	virtual float InitializeCircles(std::vector<sf::CircleShape>& vector, sf::Vector2f startPosition)
 	{
 
 		for (int i = 0; i <= 25; i++)
@@ -73,7 +73,9 @@ public:
 		{
 			vector[i].setRadius(27.f);
 			vector[i].setPosition(startPosition);
-			vector[i].setFillColor(sf::Color(255, 255, 255));
+			vector[i].setFillColor(sf::Color(18,16,12));
+			vector[i].setOutlineThickness(3.f);
+			vector[i].setOutlineColor(sf::Color(197, 160, 89));
 			startPosition.x = startPosition.x + vector[i].getRadius() * 3;
 
 			if (i == 8)
@@ -104,7 +106,7 @@ public:
 		for (int i = 0; i <= 25; i++)
 		{
 
-			text[i].setFillColor(sf::Color{ 51,255,51 });
+			text[i].setFillColor(sf::Color{ 230,255,215 });
 			//casting to float 
 			text[i].setPosition(startPosition);
 			startPosition.x = startPosition.x + circleRadius * 3.f;
@@ -122,20 +124,60 @@ public:
 				startPosition = { (circleRadius + 35.f), startPosition.y + circleRadius * 3 };
 			}
 
-			text[i].setString(char(i + 97));
+			text[i].setString(char(i + 65));
 
 
 		}
 	}
 };
 
+class Keyboard : public LampBoard
+{
+public:
+	float InitializeCircles(std::vector<sf::CircleShape>& vector, sf::Vector2f startPosition) override
+	{
 
+		for (int i = 0; i <= 25; i++)
+		{
+			vector.push_back(sf::CircleShape());
+		}
+
+		for (int i = 0; i <= 25; i++)
+		{
+			vector[i].setRadius(27.f);
+			vector[i].setPosition(startPosition);
+			vector[i].setFillColor(sf::Color(40, 40, 40));
+			vector[i].setOutlineThickness(2.f);
+			vector[i].setOutlineColor(sf::Color(180, 180, 180));
+			startPosition.x = startPosition.x + vector[i].getRadius() * 3;
+
+			if (i == 8)
+			{
+
+				startPosition = { (vector[i].getRadius() * 2) + 28.f, startPosition.y + vector[i].getRadius() * 3 };
+
+
+			}
+			else if (i == 16)
+			{
+				startPosition = { 40.f, startPosition.y + vector[i].getRadius() * 3 };
+			}
+		}
+
+		return vector[0].getRadius();
+
+	}
+
+
+};
 
 class SFMLFrontEnd
-{
+{	
 private:
-	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteExit, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textdisplay1, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard)
+	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteExit, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textdisplay1, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect)
 	{
+		window.draw(background);
+		window.draw(rect);
 		window.draw(spriteInstructions);
 		window.draw(spriteExit);
 		window.draw(spriteSetup);
@@ -192,6 +234,17 @@ public:
 		std::vector<sf::Text> textDisplayKeyBoard;
 		
 
+		sf::Texture backgroundTexture("Wood.jpeg");
+		sf::Sprite background(backgroundTexture);
+
+		sf::RectangleShape rect(sf::Vector2f(750.f,700.f));
+		rect.setPosition(sf::Vector2f(25.f, 250.f));
+		rect.setFillColor(sf::Color(45, 40, 35));
+		rect.setOutlineThickness(3.f);
+		rect.setOutlineColor(sf::Color(160, 130, 80));
+
+
+		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
 		//initialization of the button values
 		Button instructions("Instructions", { 300.f,10.f }, "Text");
 		sf::Texture textureInstructions("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
@@ -251,13 +304,13 @@ public:
 		PlugboardConfiguration plugboard;
 		RotorSetup Setup;
 		LampBoard lampBoard;
-		LampBoard keyBoard;
+		Keyboard keyBoard;
 		bool encrypt = false;
 
 		try
 		{
-			lampBoard.InitializeText(textDisplay, { 55.f,static_cast<float>(window.getSize().y) / 3.5f }, font, lampBoard.InitializeCircles(vector, { 40.f,static_cast<float>(window.getSize().y) / 3.5f }));
-			keyBoard.InitializeText(textDisplayKeyBoard, { 55.f,300.f + static_cast<float>(window.getSize().y) / 3.5f }, font, lampBoard.InitializeCircles(vectorKeyBoard, { 40.f,300.f + static_cast<float>(window.getSize().y) / 3.5f }));
+			lampBoard.InitializeText(textDisplay, { 65.f,static_cast<float>(window.getSize().y) / 2.7f }, font, lampBoard.InitializeCircles(vector, { 50.f,static_cast<float>(window.getSize().y) / 2.7f }));
+			keyBoard.InitializeText(textDisplayKeyBoard, { 65.f,300.f + static_cast<float>(window.getSize().y) / 2.7f }, font, keyBoard.InitializeCircles(vectorKeyBoard, { 50.f,300.f + static_cast<float>(window.getSize().y) / 2.7f }));
 			while (window.isOpen())
 			{
 				
@@ -312,16 +365,16 @@ public:
 							if (keyPress->scancode == keyboard[i])
 							{
 								
-								vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
+								//vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
 								vectorKeyBoard[i].setRadius(25.f);
 								window.clear();
-								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard);
+								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
 								
-								Sleep(3000);
-								vectorKeyBoard[i].setFillColor(sf::Color::White);
+								Sleep(1400);
+								//vectorKeyBoard[i].setFillColor(sf::Color::White);
 								vectorKeyBoard[i].setRadius(27.f);
 								window.clear();
-								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard);
+								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
 								
 								//performs the encrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								if (encrypt == true)
@@ -333,8 +386,8 @@ public:
 									window.draw(vector[pos]);
 									window.display();
 
-									Sleep(5000);
-									vector[pos].setFillColor(sf::Color::White);
+									Sleep(1000);
+									vector[pos].setFillColor(sf::Color(40, 40, 40));
 									window.draw(vector[pos]);
 									window.display();
 									
@@ -350,13 +403,13 @@ public:
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard);
+									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
 
-									Sleep(5000);
-									vector[pos].setFillColor(sf::Color::White);
+									Sleep(1000);
+									vector[pos].setFillColor(sf::Color(18, 16, 12));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard);
+									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
 								}
 								
 								break;
@@ -366,7 +419,7 @@ public:
 
 				}
 				window.clear();
-				UpdateWindow(window,spriteInstructions,spriteExit,spriteSetup,encryptDecS,textDisplayEnig,textDisplayIns,textdisplay1,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard);
+				UpdateWindow(window,spriteInstructions,spriteExit,spriteSetup,encryptDecS,textDisplayEnig,textDisplayIns,textdisplay1,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect);
 				//draws all of the elements agian once the lightbulb needs to be turned off
 				
 			}
