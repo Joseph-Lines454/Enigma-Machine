@@ -174,7 +174,7 @@ public:
 class SFMLFrontEnd
 {	
 private:
-	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteExit, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textdisplay1, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect)
+	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteExit, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textdisplay1, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect, RotorSetup& setup)
 	{
 		window.draw(background);
 		window.draw(rect);
@@ -201,6 +201,15 @@ private:
 			window.draw(textDisplayKeyBoard[i]);
 
 			
+		}
+		/*
+		for (int i = 0; i < setup.GetSlots().size(); i++)
+		{
+			window.draw(setup.GetSlots()[i]->sprite);
+		}*/
+		for (size_t i = 0; i < setup.GetSlots().size(); ++i)
+		{
+			window.draw(setup.GetSlots()[i]->sprite);
 		}
 		window.display();
 	}
@@ -306,7 +315,7 @@ public:
 		LampBoard lampBoard;
 		Keyboard keyBoard;
 		bool encrypt = false;
-
+		Setup.FrontEndSetup();
 		try
 		{
 			lampBoard.InitializeText(textDisplay, { 65.f,static_cast<float>(window.getSize().y) / 2.7f }, font, lampBoard.InitializeCircles(vector, { 50.f,static_cast<float>(window.getSize().y) / 2.7f }));
@@ -368,13 +377,13 @@ public:
 								//vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
 								vectorKeyBoard[i].setRadius(25.f);
 								window.clear();
-								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
+								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								
 								Sleep(1400);
 								//vectorKeyBoard[i].setFillColor(sf::Color::White);
 								vectorKeyBoard[i].setRadius(27.f);
 								window.clear();
-								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
+								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								
 								//performs the encrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								if (encrypt == true)
@@ -403,13 +412,13 @@ public:
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
+									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 
 									Sleep(1000);
 									vector[pos].setFillColor(sf::Color(18, 16, 12));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect);
+									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								}
 								
 								break;
@@ -419,7 +428,7 @@ public:
 
 				}
 				window.clear();
-				UpdateWindow(window,spriteInstructions,spriteExit,spriteSetup,encryptDecS,textDisplayEnig,textDisplayIns,textdisplay1,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect);
+				UpdateWindow(window,spriteInstructions,spriteExit,spriteSetup,encryptDecS,textDisplayEnig,textDisplayIns,textdisplay1,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect,Setup);
 				//draws all of the elements agian once the lightbulb needs to be turned off
 				
 			}
@@ -428,14 +437,6 @@ public:
 		{
 			std::cout << "Invalid" << std::endl;
 		}
-
-
-
-
-
-
-
-
 	}
 };
 

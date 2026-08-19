@@ -11,12 +11,17 @@ private:
 	int revolutionPositon = 0;
 	int rotorTitle = 0;
 
+
+
 public:
 	void SetRotorValues(std::vector<int>rotorout)
 	{
 		this->rotorOut = rotorout;
 	}
 
+
+	//we need to pass in random values for the exterior
+	//the
 
 	void SetRotorTitle(int setValue)
 	{
