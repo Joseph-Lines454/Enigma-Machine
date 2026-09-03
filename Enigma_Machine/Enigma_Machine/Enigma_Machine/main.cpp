@@ -174,6 +174,37 @@ public:
 class SFMLFrontEnd
 {	
 private:
+	
+	
+	void InstructionsWindow()
+	{
+		sf::RenderWindow window;
+		window.create(sf::VideoMode({ 800, 600 }), "My window");
+		sf::Font font;
+		font.openFromFile("Movistar Text Regular.ttf");
+
+		sf::Text textDisplayTitle(font);
+		textDisplayTitle.setString("Instructions");
+
+		textDisplayTitle.setFont(font);
+		textDisplayTitle.setPosition({ 350.f,0 });
+		textDisplayTitle.setCharacterSize(24);
+
+		// run the program as long as the window is open
+		while (window.isOpen())
+		{
+			// check all the window's events that were triggered since the last iteration of the loop
+			while (const std::optional event = window.pollEvent())
+			{
+				window.draw(textDisplayTitle);
+				window.display();
+				// "close requested" event: we close the window
+				if (event->is<sf::Event::Closed>())
+					window.close();
+			}
+		}
+	}
+
 	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteExit, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textdisplay1, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect, RotorSetup& setup)
 	{
 		window.draw(background);
@@ -215,6 +246,7 @@ private:
 	}
 public:
 
+	
 
 	void ProgramBegin()
 	{
@@ -333,7 +365,9 @@ public:
 						//show intructions on how to use the program
 						if (mousePress->button == sf::Mouse::Button::Left && spriteInstructions.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
-							newEnigma.Instructions();
+							//we want to create a new window here showing the user instructions
+							InstructionsWindow();
+							//newEnigma.Instructions();
 						}
 						//exit the program
 						else if (mousePress->button == sf::Mouse::Button::Left && spriteExit.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
