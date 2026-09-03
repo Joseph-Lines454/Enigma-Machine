@@ -43,20 +43,7 @@ protected:
 	
 };
 //inheritance implemented
-class ExitButton : public Button
-{
-public:
 
-	//inheritance of constructors
-	using Button::Button;
-
-
-	void ExitProgram()
-	{
-		// code which is used to exit a program
-		exit(0);
-	}
-};
 
 class LampBoard
 {
@@ -183,6 +170,10 @@ private:
 		sf::Font font;
 		font.openFromFile("Movistar Text Regular.ttf");
 
+		sf::Texture backgroundTexture("Wood.jpeg");
+		sf::Sprite background(backgroundTexture);
+		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
+
 		sf::Text textDisplayTitle(font);
 		textDisplayTitle.setString("Instructions");
 
@@ -190,13 +181,21 @@ private:
 		textDisplayTitle.setPosition({ 350.f,0 });
 		textDisplayTitle.setCharacterSize(24);
 
+		sf::Text instructionsDisplay(font);
+		instructionsDisplay.setString("This project has been designed to recreate an enigma machine. To start drag a rotor in each\n slot,then click on the rotor to set each individual rotors position. Configure the plugboard by\n swapping each letter in the desired letter. If your decrypting a message select, decrypt.\n Use your physical keyboard to type. Once you have typed a letter, note the letter which\n  flashes on the lampboard. You have now encrypted a letter.");
+		instructionsDisplay.setPosition({ 5.f,200.f });
+		instructionsDisplay.setCharacterSize(21);
+
+
 		// run the program as long as the window is open
 		while (window.isOpen())
 		{
 			// check all the window's events that were triggered since the last iteration of the loop
 			while (const std::optional event = window.pollEvent())
 			{
+				window.draw(background);
 				window.draw(textDisplayTitle);
+				window.draw(instructionsDisplay);
 				window.display();
 				// "close requested" event: we close the window
 				if (event->is<sf::Event::Closed>())
@@ -205,15 +204,13 @@ private:
 		}
 	}
 
-	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteExit, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textdisplay1, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect, RotorSetup& setup)
+	void UpdateWindow(sf::RenderWindow& window, sf::Sprite& spriteInstructions, sf::Sprite& spriteSetup, sf::Sprite& encryptDecS, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect, RotorSetup& setup)
 	{
 		window.draw(background);
 		window.draw(rect);
 		window.draw(spriteInstructions);
-		window.draw(spriteExit);
 		window.draw(spriteSetup);
 		window.draw(textDisplayEnig);
-		window.draw(textdisplay1);
 		window.draw(textDisplay3);
 		window.draw(encryptDecS);
 		window.draw(textDisplay4);
@@ -297,15 +294,7 @@ public:
 		textDisplayIns.setFillColor(sf::Color{ 51,255,51 });
 		textDisplayIns.setCharacterSize(15);
 
-		ExitButton exitButton("Exit", { 400.f,10.f }, "Text");
-		sf::Texture textureExit("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
-		sf::Sprite spriteExit(textureExit);
-		sf::Text textdisplay1(font);
-		textdisplay1.setString(exitButton.ReturnString());
-		spriteExit.setPosition(exitButton.GetButtonPosition());
-		textdisplay1.setPosition(exitButton.GetButtonPosition());
-		textdisplay1.setFillColor(sf::Color{ 51,255,51 });
-		textdisplay1.setCharacterSize(15);
+		
 
 
 
@@ -359,6 +348,9 @@ public:
 				//event which is used to check for user input
 				while (const std::optional event1 = window.pollEvent())
 				{
+
+					if (event1->is<sf::Event::Closed>())
+						window.close();
 					// if the user presses the mouse
 					if (const auto* mousePress = event1->getIf<sf::Event::MouseButtonPressed>())
 					{
@@ -370,13 +362,8 @@ public:
 							//newEnigma.Instructions();
 						}
 						//exit the program
-						else if (mousePress->button == sf::Mouse::Button::Left && spriteExit.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
-						{
-							delete[] rotorValues;
-							
-							
-							exitButton.ExitProgram();
-						}
+						
+						
 						//Setup the enigma machine
 						else if (mousePress->button == sf::Mouse::Button::Left && spriteSetup.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
@@ -411,13 +398,13 @@ public:
 								//vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
 								vectorKeyBoard[i].setRadius(25.f);
 								window.clear();
-								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+								UpdateWindow(window, spriteInstructions, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								
 								Sleep(1400);
 								//vectorKeyBoard[i].setFillColor(sf::Color::White);
 								vectorKeyBoard[i].setRadius(27.f);
 								window.clear();
-								UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+								UpdateWindow(window, spriteInstructions, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								
 								//performs the encrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								if (encrypt == true)
@@ -446,13 +433,13 @@ public:
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+									UpdateWindow(window, spriteInstructions, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 
 									Sleep(1000);
 									vector[pos].setFillColor(sf::Color(18, 16, 12));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, spriteInstructions, spriteExit, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textdisplay1, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+									UpdateWindow(window, spriteInstructions, spriteSetup, encryptDecS, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								}
 								
 								break;
@@ -462,7 +449,7 @@ public:
 
 				}
 				window.clear();
-				UpdateWindow(window,spriteInstructions,spriteExit,spriteSetup,encryptDecS,textDisplayEnig,textDisplayIns,textdisplay1,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect,Setup);
+				UpdateWindow(window,spriteInstructions,spriteSetup,encryptDecS,textDisplayEnig,textDisplayIns,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect,Setup);
 				//draws all of the elements agian once the lightbulb needs to be turned off
 				
 			}
