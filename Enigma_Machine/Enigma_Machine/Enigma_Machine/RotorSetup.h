@@ -81,6 +81,8 @@ public:
 		return slots;
 	}
 
+	//This will show the position to the users on the actual Enigma Machine
+
 	void FrontEndSetup()
 	{
 		//we need to draw each slot and assign a numerical value to each
@@ -101,6 +103,46 @@ public:
 		slots[0]->sprite.setScale({ 80.0f / slots[0]->texture.getSize().x,130.0f / slots[0]->texture.getSize().y});
 		slots[1]->sprite.setScale({ 80.0f / slots[1]->texture.getSize().x,130.0f / slots[1]->texture.getSize().y });
 		slots[2]->sprite.setScale({ 80.0f / slots[2]->texture.getSize().x,130.0f / slots[2]->texture.getSize().y });
+	}
+
+	//We make it so that the user can assign each rotor to a slot, we can cut out this old Command Line code!
+
+	void SetupRotors()
+	{
+		sf::RenderWindow window;
+		window.create(sf::VideoMode({ 800, 600 }), "Setup Slots");
+		sf::Font font;
+		font.openFromFile("Movistar Text Regular.ttf");
+
+		sf::Texture backgroundTexture("Wood.jpeg");
+		sf::Sprite background(backgroundTexture);
+		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
+
+		sf::Text textDisplayTitle(font);
+		textDisplayTitle.setString("Setup Slots");
+
+		textDisplayTitle.setFont(font);
+		textDisplayTitle.setPosition({ 350.f,0 });
+		textDisplayTitle.setCharacterSize(24);
+
+		
+
+
+		// run the program as long as the window is open
+		while (window.isOpen())
+		{
+			// check all the window's events that were triggered since the last iteration of the loop
+			while (const std::optional event = window.pollEvent())
+			{
+				window.draw(background);
+				window.draw(textDisplayTitle);
+				
+				window.display();
+				// "close requested" event: we close the window
+				if (event->is<sf::Event::Closed>())
+					window.close();
+			}
+		}
 	}
 
 

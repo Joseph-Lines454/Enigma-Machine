@@ -204,15 +204,18 @@ private:
 		}
 	}
 
-	void UpdateWindow(sf::RenderWindow& window, sf::RectangleShape& Instructions, sf::Sprite& spriteSetup, sf::RectangleShape& encryptRec, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect, RotorSetup& setup)
+	void UpdateWindow(sf::RenderWindow& window, sf::RectangleShape& Instructions, sf::Sprite& spriteSetup, sf::Text& setupGUITEXT, sf::RectangleShape& setupGUI, sf::RectangleShape& encryptRec, sf::Text& textDisplayEnig, sf::Text& textDisplayIns, sf::Text& textDisplay3, sf::Text& textDisplay4, std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& vectorKeyBoard, std::vector<sf::Text>& textDisplay, std::vector<sf::Text>& textDisplayKeyBoard, sf::Sprite& background, sf::RectangleShape& rect, RotorSetup& setup)
 	{
 		window.draw(background);
 		window.draw(rect);
+		window.draw(setupGUI);
+		
 		window.draw(Instructions);
 		window.draw(spriteSetup);
 		window.draw(textDisplayEnig);
 		window.draw(textDisplay3);
 		window.draw(encryptRec);
+		window.draw(setupGUITEXT);
 		window.draw(textDisplay4);
 		window.draw(textDisplayIns);
 		
@@ -316,6 +319,24 @@ public:
 		textDisplay3.setFillColor(sf::Color{ 51,255,51 });
 		textDisplay3.setCharacterSize(15);
 
+
+		
+		//sf::Texture textureInstructions("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
+		//sf::Sprite spriteInstructions(textureInstructions);
+		sf::Text setupGUITEXT(font);
+		sf::RectangleShape setupGUI(sf::Vector2(90.f, 40.f));
+		setupGUI.setPosition(sf::Vector2f(600.f, 10.f));
+		setupGUI.setFillColor(sf::Color{ 43,40,38 });
+		setupGUITEXT.setOutlineColor(sf::Color{ 212,175,55 });
+		setupGUITEXT.setString("Setup GUI");
+		//spriteInstructions.setPosition(instructions.GetButtonPosition());
+		setupGUITEXT.setPosition(sf::Vector2(605.0f, 20.0f));
+		setupGUITEXT.setFillColor(sf::Color::White);
+
+		setupGUITEXT.setCharacterSize(15);
+
+
+
 		/*
 		Button encryptDec("Encrypt", { 600.f,10.f }, "Text");
 		sf::Texture encryptDecrypt("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
@@ -367,11 +388,20 @@ public:
 				while (const std::optional event1 = window.pollEvent())
 				{
 
+				
+
+
 					if (event1->is<sf::Event::Closed>())
 						window.close();
 					// if the user presses the mouse
 					if (const auto* mousePress = event1->getIf<sf::Event::MouseButtonPressed>())
 					{
+						// we need to check if the enigma machine has actually been setup but we can leave that for now and just go into the setup screen
+
+						
+
+
+
 						//show intructions on how to use the program
 						if (mousePress->button == sf::Mouse::Button::Left && instructionsRec.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
@@ -379,7 +409,11 @@ public:
 							InstructionsWindow();
 							//newEnigma.Instructions();
 						}
-						//exit the program
+						
+						else if (mousePress->button == sf::Mouse::Button::Left && setupGUI.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+						{
+							Setup.SetupRotors();
+						}
 						
 						
 						//Setup the enigma machine
@@ -416,13 +450,13 @@ public:
 								//vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
 								vectorKeyBoard[i].setRadius(25.f);
 								window.clear();
-								UpdateWindow(window, instructionsRec, spriteSetup, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+								UpdateWindow(window, instructionsRec, spriteSetup, setupGUITEXT, setupGUI,encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								
 								Sleep(1400);
 								//vectorKeyBoard[i].setFillColor(sf::Color::White);
 								vectorKeyBoard[i].setRadius(27.f);
 								window.clear();
-								UpdateWindow(window, instructionsRec, spriteSetup, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+								UpdateWindow(window, instructionsRec, spriteSetup, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								
 								//performs the encrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								if (encrypt == true)
@@ -451,13 +485,13 @@ public:
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, instructionsRec, spriteSetup, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+									UpdateWindow(window, instructionsRec, spriteSetup, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 
 									Sleep(1000);
 									vector[pos].setFillColor(sf::Color(18, 16, 12));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, instructionsRec, spriteSetup, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+									UpdateWindow(window, instructionsRec, spriteSetup, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								}
 								
 								break;
@@ -467,7 +501,7 @@ public:
 
 				}
 				window.clear();
-				UpdateWindow(window, instructionsRec,spriteSetup, encryptRec,textDisplayEnig,textDisplayIns,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect,Setup);
+				UpdateWindow(window, instructionsRec,spriteSetup, setupGUITEXT, setupGUI, encryptRec,textDisplayEnig,textDisplayIns,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect,Setup);
 				//draws all of the elements agian once the lightbulb needs to be turned off
 				
 			}
