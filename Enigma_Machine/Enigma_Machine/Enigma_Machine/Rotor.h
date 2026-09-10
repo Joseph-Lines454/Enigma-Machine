@@ -16,7 +16,7 @@ private:
 	int rotorTitle = 0;
 	std::vector<sf::Text> textUpdate;
 	std::vector<sf::RectangleShape> backgroundUpdate;
-
+	sf::RectangleShape backgroundWhole;
 public:
 	void SetRotorValues(std::vector<int>rotorout)
 	{
@@ -26,10 +26,16 @@ public:
 	void SetPositions(sf::Vector2f startingPos, sf::Font& font)
 	{
 
+		//we should also set the background for each rotor
+
 		// 3 new text objects
 		// 3 new background objects
 		//Each needs to be incremented downwards
 		
+		backgroundWhole.setFillColor(sf::Color::Black);
+		backgroundWhole.setPosition({startingPos.x - 60.f, startingPos.y - 20.0f});
+		backgroundWhole.setSize({ 110.0f, 180.0f });
+
 		for (int i = 0; i < 3; i++)
 		{
 			textUpdate.push_back(sf::Text(font));
@@ -57,7 +63,13 @@ public:
 			//backgroundUpdate[i] = sf::RectangleShape(sf::Vector2(90.0f, 40.0f));
 			backgroundUpdate[i].setPosition(tempPositionBackground);
 			backgroundUpdate[i].setFillColor(sf::Color(40, 40, 40));
-			backgroundUpdate[i].setOutlineColor(sf::Color::Red);
+			
+			if (i == 1)
+			{
+				backgroundUpdate[i].setOutlineColor(sf::Color::Red);
+				backgroundUpdate[i].setOutlineThickness(2.f);
+			}
+
 			tempPositionBackground.y += 50.0f;
 		}
 
@@ -74,6 +86,10 @@ public:
 	std::vector<sf::RectangleShape> GetBackgroundUpdate()
 	{
 		return backgroundUpdate;
+	}
+	sf::RectangleShape GetBackgroundWhole()
+	{
+		return backgroundWhole;
 	}
 
 	void SetRotorTitle(int setValue)

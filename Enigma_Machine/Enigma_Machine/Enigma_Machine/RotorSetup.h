@@ -44,7 +44,7 @@ private:
 		int counter = 0;
 
 		//starting positions
-		sf::Vector2f startingPositions = { 100.0f,20.0f };
+		sf::Vector2f startingPositions = { 270.0f,200.0f };
 
 
 		//loop through the different rotors
@@ -166,17 +166,24 @@ public:
 		textDisplayTitle.setPosition({ 350.f,0 });
 		textDisplayTitle.setCharacterSize(24);
 
-		
-		// call function to setup the arry of values here use a for loop
-
 		Rotor* setupValsRotors = values;
 
 		RotorSetPositions(setupValsRotors, font);
 
-		//Idea for showing rotor to user, get an image of a cog, show three numbers in vertical order to show that each rotor is different
-		
+		// we need to create a textbox, allow the user to select the actual text box itself and if the user has successfully checked that textbox, the user can type
 		
 
+		sf::RectangleShape rotortextbox1;
+		sf::Text rotorInput1(font);
+		rotortextbox1.setSize({ 50.f, 50.f });
+		rotortextbox1.setPosition({ 240.f,380.f });
+		rotortextbox1.setFillColor(sf::Color::Blue);
+		rotorInput1.setPosition({220.f,340.f });
+		rotorInput1.setCharacterSize(14.f);
+
+
+
+		bool rotor1Select = false;
 		// run the program as long as the window is open
 		while (window.isOpen())
 		{
@@ -184,7 +191,7 @@ public:
 			while (const std::optional event = window.pollEvent())
 			{
 				
-				RenderAllValues(window,background,textDisplayTitle,values);
+				RenderAllValues(window,background,textDisplayTitle,values,rotortextbox1, rotorInput1);
 
 				
 				//we can also do some code here for checking if any of the values are pressed
@@ -192,20 +199,41 @@ public:
 				// "close requested" event: we close the window
 				if (event->is<sf::Event::Closed>())
 					window.close();
+				else if (const auto* mousepress = event->getIf<sf::Event::MouseButtonPressed>())
+				{
+					if (mousepress->button == sf::Mouse::Button::Left && rotortextbox1.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						rotor1Select = true;
+					}
+				}
+				else if (const auto* keyinput = event->getIf<sf::Event::KeyPressed>())
+				{
+
+					if (rotor1Select == true) {
+						// if value is equal to 1,2,3
+						std::cout << keyinput << std::endl;
+						rotor1Select = false;
+					}
+					
+
+				}
+
+
 			}
 		}
 	}
 
-	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle,Rotor* values)
+	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle,Rotor* values, sf::RectangleShape& rotortextbox1, sf::Text rotorInput1)
 	{
 		renderWindow.draw(background);
 		renderWindow.draw(textDisplayTitle);
-
+		renderWindow.draw(rotortextbox1);
+		renderWindow.draw(rotorInput1);
 		Rotor* size = values + 2;
 
 		for (Rotor* i = values; i <= size; i++)
 		{
-			
+			renderWindow.draw(i->GetBackgroundWhole());
 			for (int j = 0; j < i->GetBackgroundUpdate().size(); j++)
 			{
 				// draw the background values
@@ -217,21 +245,12 @@ public:
 				// draw the text values
 				renderWindow.draw(i->GetTextUpdate()[j]);
 			}
+			
 		}
 
 		renderWindow.display();
 		// we got get a memory error here because of the values point not being reset but we will see i guess lol
 	}
-
-
-
-
-
-
-
-
-
-
 
 	//compile time polymorphism (method overloading)ss
 	void RotorSet(Rotor* rotor, int size)
@@ -251,7 +270,7 @@ public:
 		rotor = firstval;
 
 
-
+		
 		std::cout << "Select which rotors you want in each slot From right to left" << std::endl;
 
 		int counter = 0;
@@ -288,8 +307,6 @@ public:
 						valAssign->SetRotorTitle(rotorInput);
 						valAssign->SetRotorValues(*VectorPointer[rotorInput - 1]);
 						valAssign++;
-
-
 					}
 				}
 				if (found == false)
@@ -301,8 +318,6 @@ public:
 			}
 			catch (...)
 			{
-
-
 				std::cout << "You need to input a number between 1 and 3" << std::endl;
 				rotor--;
 				counter--;
