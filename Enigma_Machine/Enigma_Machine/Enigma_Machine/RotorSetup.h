@@ -34,6 +34,38 @@ private:
 		}
 	};
 
+	void RotorSetPositions(Rotor* rotorValues, sf::Font& font)
+	{
+
+		Rotor* size = rotorValues + 2;
+		Rotor* loopThrough = rotorValues + 2;
+		Rotor* startPos = rotorValues;
+		int input = 0;
+		int counter = 0;
+
+		//starting positions
+		sf::Vector2f startingPositions = { 100.0f,20.0f };
+
+
+		//loop through the different rotors
+		for (Rotor* i = rotorValues; i <= size; i++)
+		{
+			i->SetPositions(startingPositions, font);
+			startingPositions.x += 120.f;
+		}
+
+		
+
+		//Each rotor is going to have 3 letters and one gray bar.
+		//We need to render all 3 of these rotors in an efficent way
+
+
+
+
+	}
+
+	
+
 
 	//rotor values
 	std::vector<int> RotorOneOutput = { 19,15,5,7,23,16,2,1,14,22,8,20,21,6,24,11,25,4,0,12,13,18,9,10,3,17 };
@@ -83,6 +115,8 @@ public:
 
 	//This will show the position to the users on the actual Enigma Machine
 
+
+	//This will show the current letters when not on the current screen
 	void FrontEndSetup()
 	{
 		//we need to draw each slot and assign a numerical value to each
@@ -107,7 +141,14 @@ public:
 
 	//We make it so that the user can assign each rotor to a slot, we can cut out this old Command Line code!
 
-	void SetupRotors()
+
+
+
+	
+
+
+
+	void SetupRotors(Rotor* values)
 	{
 		sf::RenderWindow window;
 		window.create(sf::VideoMode({ 800, 600 }), "Setup Slots");
@@ -126,7 +167,15 @@ public:
 		textDisplayTitle.setCharacterSize(24);
 
 		
+		// call function to setup the arry of values here use a for loop
 
+		Rotor* setupValsRotors = values;
+
+		RotorSetPositions(setupValsRotors, font);
+
+		//Idea for showing rotor to user, get an image of a cog, show three numbers in vertical order to show that each rotor is different
+		
+		
 
 		// run the program as long as the window is open
 		while (window.isOpen())
@@ -134,16 +183,52 @@ public:
 			// check all the window's events that were triggered since the last iteration of the loop
 			while (const std::optional event = window.pollEvent())
 			{
-				window.draw(background);
-				window.draw(textDisplayTitle);
 				
-				window.display();
+				RenderAllValues(window,background,textDisplayTitle,values);
+
+				
+				//we can also do some code here for checking if any of the values are pressed
+
 				// "close requested" event: we close the window
 				if (event->is<sf::Event::Closed>())
 					window.close();
 			}
 		}
 	}
+
+	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle,Rotor* values)
+	{
+		renderWindow.draw(background);
+		renderWindow.draw(textDisplayTitle);
+
+		Rotor* size = values + 2;
+
+		for (Rotor* i = values; i <= size; i++)
+		{
+			
+			for (int j = 0; j < i->GetBackgroundUpdate().size(); j++)
+			{
+				// draw the background values
+				renderWindow.draw(i->GetBackgroundUpdate()[j]);
+			}
+
+			for (int j = 0; j < i->GetTextUpdate().size(); j++)
+			{
+				// draw the text values
+				renderWindow.draw(i->GetTextUpdate()[j]);
+			}
+		}
+
+		renderWindow.display();
+		// we got get a memory error here because of the values point not being reset but we will see i guess lol
+	}
+
+
+
+
+
+
+
 
 
 

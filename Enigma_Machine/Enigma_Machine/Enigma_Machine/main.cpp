@@ -234,11 +234,6 @@ private:
 
 			
 		}
-		/*
-		for (int i = 0; i < setup.GetSlots().size(); i++)
-		{
-			window.draw(setup.GetSlots()[i]->sprite);
-		}*/
 		for (size_t i = 0; i < setup.GetSlots().size(); ++i)
 		{
 			window.draw(setup.GetSlots()[i]->sprite);
@@ -251,9 +246,7 @@ public:
 
 	void ProgramBegin()
 	{
-
 		// creating the window as well as setting the title (Enigma Machine)
-
 		sf::RenderWindow window;
 		window.create(sf::VideoMode({ 800, 1000 }), "Enigma Machine");
 		//std::cout << "Window has been created: " << window.isOpen() << std::endl;
@@ -275,7 +268,6 @@ public:
 		std::vector<sf::CircleShape> vectorKeyBoard;
 		std::vector<sf::Text> textDisplayKeyBoard;
 		
-
 		sf::Texture backgroundTexture("Wood.jpeg");
 		sf::Sprite background(backgroundTexture);
 
@@ -302,12 +294,6 @@ public:
 		textDisplayIns.setFillColor(sf::Color::White);
 		
 		textDisplayIns.setCharacterSize(15);
-
-		
-
-
-
-
 
 		Button setup("Setup", { 500.f,10.f }, "Text");
 		sf::Texture textureSetup("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
@@ -382,25 +368,15 @@ public:
 			keyBoard.InitializeText(textDisplayKeyBoard, { 65.f,300.f + static_cast<float>(window.getSize().y) / 2.7f }, font, keyBoard.InitializeCircles(vectorKeyBoard, { 50.f,300.f + static_cast<float>(window.getSize().y) / 2.7f }));
 			while (window.isOpen())
 			{
-				
-
 				//event which is used to check for user input
 				while (const std::optional event1 = window.pollEvent())
 				{
-
-				
-
-
 					if (event1->is<sf::Event::Closed>())
 						window.close();
 					// if the user presses the mouse
 					if (const auto* mousePress = event1->getIf<sf::Event::MouseButtonPressed>())
 					{
 						// we need to check if the enigma machine has actually been setup but we can leave that for now and just go into the setup screen
-
-						
-
-
 
 						//show intructions on how to use the program
 						if (mousePress->button == sf::Mouse::Button::Left && instructionsRec.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
@@ -412,9 +388,8 @@ public:
 						
 						else if (mousePress->button == sf::Mouse::Button::Left && setupGUI.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
-							Setup.SetupRotors();
+							Setup.SetupRotors(firstval);
 						}
-						
 						
 						//Setup the enigma machine
 						else if (mousePress->button == sf::Mouse::Button::Left && spriteSetup.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
@@ -425,7 +400,6 @@ public:
 							plugboard.PlugboardSettings();
 							Setup.RotorSet(firstval, 3);
 							Setup.RotorSet(firstval);
-
 						}
 						// switches to encrypt/decrypt
 						else if (mousePress->button == sf::Mouse::Button::Left && encryptRec.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
@@ -441,7 +415,6 @@ public:
 				   sf::Keyboard::Scancode::T,sf::Keyboard::Scancode::U,sf::Keyboard::Scancode::V,sf::Keyboard::Scancode::W,sf::Keyboard::Scancode::X,sf::Keyboard::Scancode::Y,sf::Keyboard::Scancode::Z };
 						
 						//need to create functionality for keyboard when user presses make the key a different colour
-
 						for (int i = 0; i < 26; i++)
 						{
 							if (keyPress->scancode == keyboard[i])
@@ -477,11 +450,8 @@ public:
 								//performs the decrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								else if (encrypt == false)
 								{
-
 									int pos = newEnigma.DecryptMenu(rotorValues, plugboard, static_cast<char>(i + 97)) - 97;
-
 									std::cout << char(pos + 97) << std::endl;
-
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.clear();
@@ -493,17 +463,14 @@ public:
 									window.clear();
 									UpdateWindow(window, instructionsRec, spriteSetup, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, textDisplay3, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
 								}
-								
 								break;
 							}
 						}
 					}
-
 				}
 				window.clear();
 				UpdateWindow(window, instructionsRec,spriteSetup, setupGUITEXT, setupGUI, encryptRec,textDisplayEnig,textDisplayIns,textDisplay3,textDisplay4,vector,vectorKeyBoard,textDisplay,textDisplayKeyBoard,background,rect,Setup);
 				//draws all of the elements agian once the lightbulb needs to be turned off
-				
 			}
 		}
 		catch (...)
