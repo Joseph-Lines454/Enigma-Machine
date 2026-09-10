@@ -177,13 +177,35 @@ public:
 		sf::Text rotorInput1(font);
 		rotortextbox1.setSize({ 50.f, 50.f });
 		rotortextbox1.setPosition({ 240.f,380.f });
-		rotortextbox1.setFillColor(sf::Color::Blue);
-		rotorInput1.setPosition({220.f,340.f });
-		rotorInput1.setCharacterSize(14.f);
+		rotortextbox1.setFillColor(sf::Color::White);
+		rotorInput1.setPosition({240.f,380.f });
+		rotorInput1.setCharacterSize(14);
+		rotorInput1.setFillColor(sf::Color::Black);
+
+
+		sf::RectangleShape rotortextbox2;
+		sf::Text rotorInput2(font);
+		rotortextbox2.setSize({ 50.f, 50.f });
+		rotortextbox2.setPosition({ 340.f,380.f });
+		rotortextbox2.setFillColor(sf::Color::White);
+		rotorInput2.setPosition({ 340.f,380.f });
+		rotorInput2.setCharacterSize(14);
+		rotorInput2.setFillColor(sf::Color::Black);
+
+		sf::RectangleShape rotortextbox3;
+		sf::Text rotorInput3(font);
+		rotortextbox3.setSize({ 50.f, 50.f });
+		rotortextbox3.setPosition({ 440.f,380.f });
+		rotortextbox3.setFillColor(sf::Color::White);
+		rotorInput3.setPosition({ 440.f,380.f });
+		rotorInput3.setCharacterSize(14);
+		rotorInput3.setFillColor(sf::Color::Black);
 
 
 
 		bool rotor1Select = false;
+		bool rotor2Select = false;
+		bool rotor3Select = false;
 		// run the program as long as the window is open
 		while (window.isOpen())
 		{
@@ -191,7 +213,7 @@ public:
 			while (const std::optional event = window.pollEvent())
 			{
 				
-				RenderAllValues(window,background,textDisplayTitle,values,rotortextbox1, rotorInput1);
+				RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
 
 				
 				//we can also do some code here for checking if any of the values are pressed
@@ -206,14 +228,20 @@ public:
 						rotor1Select = true;
 					}
 				}
-				else if (const auto* keyinput = event->getIf<sf::Event::KeyPressed>())
+				else if (const auto* keyinput = event->getIf<sf::Event::TextEntered>())
 				{
 
-					if (rotor1Select == true) {
+					if (rotor1Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
 						// if value is equal to 1,2,3
-						std::cout << keyinput << std::endl;
+						//std::cout << keyinput->scancode << std::endl;
+						//add an list here
+						std::cout << static_cast<char>(keyinput->unicode) << std::endl;
+						rotorInput1.setString(static_cast<char>(keyinput->unicode));
 						rotor1Select = false;
+						RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
 					}
+					
+					
 					
 
 				}
@@ -223,12 +251,11 @@ public:
 		}
 	}
 
-	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle,Rotor* values, sf::RectangleShape& rotortextbox1, sf::Text rotorInput1)
+	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle,Rotor* values, sf::RectangleShape& rotortextbox1, sf::Text& rotorInput1, sf::RectangleShape& rotortextbox2, sf::Text& rotorInput2, sf::RectangleShape& rotortextbox3, sf::Text& rotorInput3)
 	{
 		renderWindow.draw(background);
 		renderWindow.draw(textDisplayTitle);
-		renderWindow.draw(rotortextbox1);
-		renderWindow.draw(rotorInput1);
+		
 		Rotor* size = values + 2;
 
 		for (Rotor* i = values; i <= size; i++)
@@ -247,7 +274,12 @@ public:
 			}
 			
 		}
-
+		renderWindow.draw(rotortextbox1);
+		renderWindow.draw(rotorInput1);
+		renderWindow.draw(rotortextbox2);
+		renderWindow.draw(rotorInput2);
+		renderWindow.draw(rotortextbox3);
+		renderWindow.draw(rotorInput3);
 		renderWindow.display();
 		// we got get a memory error here because of the values point not being reset but we will see i guess lol
 	}
