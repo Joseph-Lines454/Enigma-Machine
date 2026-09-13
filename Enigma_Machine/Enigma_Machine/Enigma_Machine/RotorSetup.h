@@ -53,17 +53,76 @@ private:
 			i->SetPositions(startingPositions, font);
 			startingPositions.x += 120.f;
 		}
+	}
+	void CheckInputs(sf::RectangleShape& rotortextbox1, sf::Text& rotorInput1, sf::RectangleShape& rotortextbox2, sf::Text& rotorInput2, sf::RectangleShape& rotortextbox3, sf::Text& rotorInput3)
+	{
+		//we havent set the rotors positions.
 
-		
+		if ((rotorInput1.getString() == rotorInput2.getString() && rotorInput2.getString() == rotorInput3.getString()) && (rotorInput1.getString() != "" && rotorInput2.getString() != "" && rotorInput3.getString() != ""))
+		{
+			rotortextbox1.setFillColor(sf::Color::Red);
+			rotortextbox2.setFillColor(sf::Color::Red);
+			rotortextbox3.setFillColor(sf::Color::Red);
+		}
 
-		//Each rotor is going to have 3 letters and one gray bar.
-		//We need to render all 3 of these rotors in an efficent way
-
-
-
-
+		else if ((rotorInput1.getString() == rotorInput2.getString()) && (rotorInput1.getString() != "" && rotorInput2.getString() != ""))
+		{
+			rotortextbox1.setFillColor(sf::Color::Red);
+			rotortextbox3.setFillColor(sf::Color::White);
+			rotortextbox2.setFillColor(sf::Color::Red);
+		}
+		else if ((rotorInput2.getString() == rotorInput3.getString()) && (rotorInput2.getString() != "" && rotorInput3.getString() != ""))
+		{
+			rotortextbox1.setFillColor(sf::Color::White);
+			rotortextbox2.setFillColor(sf::Color::Red);
+			rotortextbox3.setFillColor(sf::Color::Red);
+		}
+		else if ((rotorInput1.getString() == rotorInput3.getString()) && (rotorInput1.getString() != "" && rotorInput3.getString() != ""))
+		{
+			rotortextbox1.setFillColor(sf::Color::Red);
+			rotortextbox2.setFillColor(sf::Color::White);
+			rotortextbox3.setFillColor(sf::Color::Red);
+		}
+		else
+		{
+			rotortextbox1.setFillColor(sf::Color::White);
+			rotortextbox2.setFillColor(sf::Color::White);
+			rotortextbox3.setFillColor(sf::Color::White);
+		}
 	}
 
+	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle, Rotor* values, sf::RectangleShape& rotortextbox1, sf::Text& rotorInput1, sf::RectangleShape& rotortextbox2, sf::Text& rotorInput2, sf::RectangleShape& rotortextbox3, sf::Text& rotorInput3)
+	{
+		renderWindow.draw(background);
+		renderWindow.draw(textDisplayTitle);
+
+		Rotor* size = values + 2;
+
+		for (Rotor* i = values; i <= size; i++)
+		{
+			renderWindow.draw(i->GetBackgroundWhole());
+			for (int j = 0; j < i->GetBackgroundUpdate().size(); j++)
+			{
+				// draw the background values
+				renderWindow.draw(i->GetBackgroundUpdate()[j]);
+			}
+
+			for (int j = 0; j < i->GetTextUpdate().size(); j++)
+			{
+				// draw the text values
+				renderWindow.draw(i->GetTextUpdate()[j]);
+			}
+
+		}
+		renderWindow.draw(rotortextbox1);
+		renderWindow.draw(rotorInput1);
+		renderWindow.draw(rotortextbox2);
+		renderWindow.draw(rotorInput2);
+		renderWindow.draw(rotortextbox3);
+		renderWindow.draw(rotorInput3);
+		renderWindow.display();
+		// we got get a memory error here because of the values point not being reset but we will see i guess lol
+	}
 	
 
 
@@ -79,13 +138,11 @@ private:
 
 public:
 
-	// Setting rotor Values
+	// Setting rotor Values -  Function which may need to be deleted in future
 	void RotorSet(Rotor* rotorValues)
 	{
-
 		std::cout << "This is the menu where you set your rotors" << std::endl;
 		std::cout << "Each rotor input a value between 0 and 26" << std::endl;
-
 		Rotor* size = rotorValues + 2;
 		int input = 0;
 		int counter = 0;
@@ -120,16 +177,9 @@ public:
 	void FrontEndSetup()
 	{
 		//we need to draw each slot and assign a numerical value to each
-
-
-
 		slots.push_back(std::make_unique<Slots>(1));
 		slots.push_back(std::make_unique<Slots>(2));
 		slots.push_back(std::make_unique<Slots>(3));
-
-		//slots.push_back(Slots(2));
-		//slots.push_back(Slots(3));
-
 
 		slots[0]->sprite.setPosition({ 240.f,270.f });
 		slots[1]->sprite.setPosition({ 340.f,270.f });
@@ -140,14 +190,6 @@ public:
 	}
 
 	//We make it so that the user can assign each rotor to a slot, we can cut out this old Command Line code!
-
-
-
-
-	
-
-
-
 	void SetupRotors(Rotor* values)
 	{
 		sf::RenderWindow window;
@@ -167,12 +209,9 @@ public:
 		textDisplayTitle.setCharacterSize(24);
 
 		Rotor* setupValsRotors = values;
-
+		Rotor* FindRotor = values;
 		RotorSetPositions(setupValsRotors, font);
-
 		// we need to create a textbox, allow the user to select the actual text box itself and if the user has successfully checked that textbox, the user can type
-		
-
 		sf::RectangleShape rotortextbox1;
 		sf::Text rotorInput1(font);
 		rotortextbox1.setSize({ 50.f, 50.f });
@@ -181,7 +220,6 @@ public:
 		rotorInput1.setPosition({240.f,380.f });
 		rotorInput1.setCharacterSize(14);
 		rotorInput1.setFillColor(sf::Color::Black);
-
 
 		sf::RectangleShape rotortextbox2;
 		sf::Text rotorInput2(font);
@@ -201,8 +239,6 @@ public:
 		rotorInput3.setCharacterSize(14);
 		rotorInput3.setFillColor(sf::Color::Black);
 
-
-
 		bool rotor1Select = false;
 		bool rotor2Select = false;
 		bool rotor3Select = false;
@@ -212,23 +248,38 @@ public:
 			// check all the window's events that were triggered since the last iteration of the loop
 			while (const std::optional event = window.pollEvent())
 			{
-				
 				RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
-
-				
 				//we can also do some code here for checking if any of the values are pressed
-
 				// "close requested" event: we close the window
 				if (event->is<sf::Event::Closed>())
 					window.close();
-				else if (const auto* mousepress = event->getIf<sf::Event::MouseButtonPressed>())
+				if (const auto* mousepress = event->getIf<sf::Event::MouseButtonPressed>())
 				{
 					if (mousepress->button == sf::Mouse::Button::Left && rotortextbox1.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 					{
 						rotor1Select = true;
+						rotor2Select = false;
+						rotor3Select = false;
 					}
+					else if (mousepress->button == sf::Mouse::Button::Left && rotortextbox2.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						rotor1Select = false;
+						rotor2Select = true;
+						rotor3Select = false;
+					}
+					else if (mousepress->button == sf::Mouse::Button::Left && rotortextbox3.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						rotor1Select = false;
+						rotor2Select = false;
+						rotor3Select = true;
+					}
+					
+					DetectInputAndAlter(mousepress, FindRotor, window);
+					RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
+
+
 				}
-				else if (const auto* keyinput = event->getIf<sf::Event::TextEntered>())
+				if (const auto* keyinput = event->getIf<sf::Event::TextEntered>())
 				{
 
 					if (rotor1Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
@@ -238,51 +289,51 @@ public:
 						std::cout << static_cast<char>(keyinput->unicode) << std::endl;
 						rotorInput1.setString(static_cast<char>(keyinput->unicode));
 						rotor1Select = false;
+
+						RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
+					}
+					else if (rotor2Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
+						// if value is equal to 1,2,3
+						//std::cout << keyinput->scancode << std::endl;
+						//add an list here
+						std::cout << static_cast<char>(keyinput->unicode) << std::endl;
+						rotorInput2.setString(static_cast<char>(keyinput->unicode));
+						rotor2Select = false;
+						RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
+					}
+					else if (rotor3Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
+						// if value is equal to 1,2,3
+						//std::cout << keyinput->scancode << std::endl;
+						//add an list here
+						std::cout << static_cast<char>(keyinput->unicode) << std::endl;
+						rotorInput3.setString(static_cast<char>(keyinput->unicode));
+						rotor3Select = false;
 						RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
 					}
 					
-					
-					
-
-				}
-
-
-			}
-		}
-	}
-
-	void RenderAllValues(sf::RenderWindow& renderWindow, sf::Sprite& background, sf::Text& textDisplayTitle,Rotor* values, sf::RectangleShape& rotortextbox1, sf::Text& rotorInput1, sf::RectangleShape& rotortextbox2, sf::Text& rotorInput2, sf::RectangleShape& rotortextbox3, sf::Text& rotorInput3)
-	{
-		renderWindow.draw(background);
-		renderWindow.draw(textDisplayTitle);
-		
-		Rotor* size = values + 2;
-
-		for (Rotor* i = values; i <= size; i++)
-		{
-			renderWindow.draw(i->GetBackgroundWhole());
-			for (int j = 0; j < i->GetBackgroundUpdate().size(); j++)
-			{
-				// draw the background values
-				renderWindow.draw(i->GetBackgroundUpdate()[j]);
-			}
-
-			for (int j = 0; j < i->GetTextUpdate().size(); j++)
-			{
-				// draw the text values
-				renderWindow.draw(i->GetTextUpdate()[j]);
-			}
 			
+				}
+				//Checking the values which the user is selecting
+
+				CheckInputs(rotortextbox1,rotorInput1,rotortextbox2,rotorInput2,rotortextbox3,rotorInput3);
+				RenderAllValues(window, background, textDisplayTitle, values, rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
+
+			}
 		}
-		renderWindow.draw(rotortextbox1);
-		renderWindow.draw(rotorInput1);
-		renderWindow.draw(rotortextbox2);
-		renderWindow.draw(rotorInput2);
-		renderWindow.draw(rotortextbox3);
-		renderWindow.draw(rotorInput3);
-		renderWindow.display();
-		// we got get a memory error here because of the values point not being reset but we will see i guess lol
 	}
+
+	void DetectInputAndAlter(const sf::Event::MouseButtonPressed* mousepress,Rotor* findRotor, sf::RenderWindow& window)
+	{
+		//This works - updating of the values
+		for (Rotor* i = findRotor; i <= findRotor + 2; i++)
+		{
+			if (mousepress->button == sf::Mouse::Button::Left && i->GetBackgroundWhole().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+			{
+				i->SetRotorPosition();
+			}
+		}
+	}
+
 
 	//compile time polymorphism (method overloading)ss
 	void RotorSet(Rotor* rotor, int size)

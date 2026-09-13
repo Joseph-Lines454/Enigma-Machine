@@ -69,18 +69,16 @@ private:
 	void RevolutionCheck(Rotor* rotor, int size)
 	{
 		// Automatically set the rotor position
-		
 		rotor->SetRotorPositon(rotor->GetRotorRevolutionPositon() + 1);
 		Rotor* Rotorsize = rotor + size;
 		// loop through the rotors, if they have made a full turn, the rotors will change their positon
 		for (rotor; rotor <= Rotorsize; rotor++)
 		{
-
-
 			// sets the current rotors position back to zero then increased the next rotors position
 			if (rotor->GetRotorRevolutionPositon() == 26 && rotor != Rotorsize)
 			{
-				rotor->SetRotorPositon(0);
+				//experementing here
+				rotor->SetRotorPositon(1);
 				rotor++;
 				rotor->SetRotorPositon(rotor->GetRotorRevolutionPositon() + 1);
 				rotor--;
@@ -88,15 +86,11 @@ private:
 			// last rotor just gets set back to zero
 			else if (rotor->GetRotorRevolutionPositon() == 26 && rotor == Rotorsize)
 			{
-				rotor->SetRotorPositon(0);
+				// se this to 1?
+				rotor->SetRotorPositon(1);
 			}
-
-
-
 		}
 	}
-
-
 
 public:
 	

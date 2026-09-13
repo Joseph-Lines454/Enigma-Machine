@@ -111,7 +111,7 @@ public:
 		{
 			std::cout << "This value is to large, please input a new value";
 		}
-		else if (turnposInput < 0)
+		else if (turnposInput < 1)
 		{
 			std::cout << "This position is to small, please enter a new value" << std::endl;
 		}
@@ -125,6 +125,25 @@ public:
 		return false;
 
 	}
+
+	//Set rotorPosition
+	void SetRotorPosition()
+	{
+		for (int i = 0; i < textUpdate.size(); i++)
+		{
+			// increment each number by 1, if that number hits 26, then we use modulus to get remainer - 1
+			textUpdate[i].setString(std::to_string((((std::stoi(textUpdate[i].getString().toAnsiString()))) % 26) + 1));
+
+			if (i == 1)
+			{
+				// the second value within the vector contains the actual revolution position, therefore, we need to set the reovolution position to that
+				this->revolutionPositon = ((((std::stoi(textUpdate[i].getString().toAnsiString()))) - 1) % 26) + 1;
+				std::cout << this->revolutionPositon << std::endl;
+			}
+		}
+	}
+
+
 	int GetRotorRevolutionPositon()
 	{
 		return revolutionPositon;
