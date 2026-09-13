@@ -17,10 +17,19 @@ private:
 	std::vector<sf::Text> textUpdate;
 	std::vector<sf::RectangleShape> backgroundUpdate;
 	sf::RectangleShape backgroundWhole;
+	int PositionGUI = 5;
 public:
 	void SetRotorValues(std::vector<int>rotorout)
 	{
 		this->rotorOut = rotorout;
+	}
+	void SetPositionGUI(int pos)
+	{
+		this->PositionGUI = pos;
+	}
+	int GetPositionGUI()
+	{
+		return PositionGUI;
 	}
 
 	void SetPositions(sf::Vector2f startingPos, sf::Font& font)
@@ -72,13 +81,7 @@ public:
 
 			tempPositionBackground.y += 50.0f;
 		}
-
-
-
 	}
-	
-
-
 	std::vector<sf::Text> GetTextUpdate()
 	{
 		return textUpdate;
