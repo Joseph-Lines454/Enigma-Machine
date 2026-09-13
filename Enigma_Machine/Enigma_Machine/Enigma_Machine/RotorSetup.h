@@ -34,6 +34,38 @@ private:
 		}
 	};
 
+	void RotorSetFromGUI(Rotor* rotors, int size)
+	{
+		// make a copy of the actual values, then replace the rotors points, then check outside of the loop to see if the origonal points values have changed.
+		Rotor* copy = rotors;
+		Rotor* End = rotors + size;
+		for (Rotor* i = copy; i <= End; i++)
+		{
+			std::cout << "Rotor number: " << i->GetRotorTitle() << "is now:" << i->GetPositionGUI() << std::endl;
+
+		}
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if (rotors[i].GetPositionGUI() < rotors[j].GetPositionGUI())
+				{
+					Rotor temp = rotors[j];
+					rotors[j] = rotors[i];
+					rotors[i] = temp;
+				}
+			}
+		}
+		int count = 1;
+		for (Rotor* i = copy; i <= End; i++)
+		{
+			std::cout << "Rotor number: " << i->GetRotorTitle() << "is now:" << i->GetPositionGUI() << std::endl;
+
+		}
+
+	}
+
+
 	void RotorSetPositions(Rotor* rotorValues, sf::Font& font)
 	{
 
@@ -56,7 +88,7 @@ private:
 	}
 	void CheckInputs(sf::RectangleShape& rotortextbox1, sf::Text& rotorInput1, sf::RectangleShape& rotortextbox2, sf::Text& rotorInput2, sf::RectangleShape& rotortextbox3, sf::Text& rotorInput3)
 	{
-		//we havent set the rotors positions.
+		//visual if the values are the same or valid, incorrect values indicated by red
 
 		if ((rotorInput1.getString() == rotorInput2.getString() && rotorInput2.getString() == rotorInput3.getString()) && (rotorInput1.getString() != "" && rotorInput2.getString() != "" && rotorInput3.getString() != ""))
 		{
@@ -287,6 +319,7 @@ public:
 						std::cout << "All conditions have been met!" << std::endl;
 						//so the rotors values have all been set but not the order at this point...
 						RotorSetFromGUI(values, 2);
+						window.close();
 					}
 					
 					DetectInputAndAlter(mousepress, FindRotor, window);
@@ -306,6 +339,7 @@ public:
 						///might not work
 						std::cout << keyinput->unicode << std::endl;
 						values[0].SetPositionGUI(static_cast<int>(keyinput->unicode - U'0'));
+						values[0].SetRotorTitle(1);
 						std::cout << values[0].GetPositionGUI() << std::endl;
 					}
 					else if (rotor2Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
@@ -316,6 +350,7 @@ public:
 						rotorInput2.setString(static_cast<char>(keyinput->unicode));
 						rotor2Select = false;
 						values[1].SetPositionGUI(static_cast<int>(keyinput->unicode - U'0'));
+						values[1].SetRotorTitle(2);
 						std::cout << values[1].GetPositionGUI() << std::endl;
 					}
 					else if (rotor3Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
@@ -326,6 +361,7 @@ public:
 						rotorInput3.setString(static_cast<char>(keyinput->unicode));
 						rotor3Select = false;
 						values[2].SetPositionGUI(static_cast<int>(keyinput->unicode - U'0'));
+						values[2].SetRotorTitle(3);
 						std::cout << values[2].GetPositionGUI() << std::endl;
 					}
 					CheckInputs(rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
@@ -335,39 +371,7 @@ public:
 		}
 	}
 
-	void RotorSetFromGUI(Rotor* rotors, int size)
-	{
-		// make a copy of the actual values, then replace the rotors points, then check outside of the loop to see if the origonal points values have changed.
-
-
-		// THIS IS BROKEN DO NOT FORGET TO FIX THIS!
-		Rotor* copy = rotors;
-		Rotor* End = rotors + size;
-		for (Rotor* i = copy; i <= End; i++)
-		{
-			std::cout << "Rotor number: " << i << "is now:" << i->GetPositionGUI() << std::endl;
-			
-		}
-		for (int i = 0; i < 3; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				if (rotors[i].GetPositionGUI() < rotors[j].GetPositionGUI())
-				{
-					Rotor temp = rotors[j];
-					rotors[j] = rotors[i];
-					rotors[i] = temp;
-				}
-			}
-		}
-		int count = 1;
-		for (Rotor* i = copy; i <= End; i++)
-		{
-			std::cout << "Rotor number: " << i << "is now:" << i->GetPositionGUI() << std::endl;
-		
-		}
-		
-	}
+	
 
 
 	void DetectInputAndAlter(const sf::Event::MouseButtonPressed* mousepress,Rotor* findRotor, sf::RenderWindow& window)

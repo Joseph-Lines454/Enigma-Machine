@@ -1,5 +1,11 @@
 #pragma once
 #include <iostream>;
+#include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+#include <SFML/Network.hpp>
+#include <SFML/Audio.hpp>
 //configuraiton of the plugboard
 class PlugboardConfiguration
 {
@@ -106,6 +112,37 @@ public:
 			}
 		}
 
+	}
+	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background)
+	{
+		window.draw(background);
+		window.draw(textDisplayTitle);
+		window.display();
+	}
+	// we need to go over the plugboard settings and potentially change structure of program to make sure that the correct values are being sent to the engima machine code
+	void SetupPlugboard()
+	{
+		sf::RenderWindow window;
+		window.create(sf::VideoMode({ 800, 600 }), "Plugboard Configuration");
+		sf::Font font;
+		font.openFromFile("Movistar Text Regular.ttf");
+
+		sf::Texture backgroundTexture("Wood.jpeg");
+		sf::Sprite background(backgroundTexture);
+		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
+
+		sf::Text textDisplayTitle(font);
+		textDisplayTitle.setString("Plugboard");
+
+		textDisplayTitle.setFont(font);
+		textDisplayTitle.setPosition({ 350.f,0 });
+		textDisplayTitle.setCharacterSize(24);
+
+		
+		while (window.isOpen())
+		{
+			RenderValues(window, textDisplayTitle, background);
+		}
 	}
 
 

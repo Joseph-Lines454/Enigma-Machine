@@ -389,6 +389,7 @@ public:
 						else if (mousePress->button == sf::Mouse::Button::Left && setupGUI.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							Setup.SetupRotors(firstval);
+							plugboard.SetupPlugboard();
 						}
 						
 						//Setup the enigma machine

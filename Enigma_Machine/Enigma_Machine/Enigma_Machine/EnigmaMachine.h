@@ -37,9 +37,6 @@ private:
 
 	void DecryptProccess(int letterNum, Rotor* currentrotor, Rotor* lastrotor, int* number, bool assed)
 	{
-
-
-
 		for (int i = 0; i < (*currentrotor).GetRotorOutValues().size(); i++)
 		{
 
