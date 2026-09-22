@@ -214,9 +214,9 @@ public:
 		slots.push_back(std::make_unique<Slots>(2));
 		slots.push_back(std::make_unique<Slots>(3));
 
-		slots[0]->sprite.setPosition({ 240.f,270.f });
-		slots[1]->sprite.setPosition({ 340.f,270.f });
-		slots[2]->sprite.setPosition({ 440.f,270.f });
+		slots[0]->sprite.setPosition({ 240.f,100.f });
+		slots[1]->sprite.setPosition({ 340.f,100.f });
+		slots[2]->sprite.setPosition({ 440.f,100.f });
 		slots[0]->sprite.setScale({ 80.0f / slots[0]->texture.getSize().x,130.0f / slots[0]->texture.getSize().y});
 		slots[1]->sprite.setScale({ 80.0f / slots[1]->texture.getSize().x,130.0f / slots[1]->texture.getSize().y });
 		slots[2]->sprite.setScale({ 80.0f / slots[2]->texture.getSize().x,130.0f / slots[2]->texture.getSize().y });

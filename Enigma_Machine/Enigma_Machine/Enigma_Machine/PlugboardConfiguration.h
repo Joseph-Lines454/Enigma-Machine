@@ -55,14 +55,7 @@ public:
 		}
 		return 0;
 	}
-
-
-
-
-
-
-
-			// swapping mechanism
+	// swapping mechanism
 	void LettersSwap(char letter1, char letter2, char* plugboardSettings, int arraySize)
 	{
 
