@@ -8,9 +8,6 @@
 
 #include "EnigmaMachine.h"
 
-
-
-
 //button class
 class Button
 {
@@ -42,8 +39,6 @@ protected:
 	sf::Vector2f buttonPosition = {15.f,30.f };
 	
 };
-//inheritance implemented
-
 
 class LampBoard
 {
@@ -97,7 +92,6 @@ public:
 			//casting to float 
 			text[i].setPosition(startPosition);
 			startPosition.x = startPosition.x + circleRadius * 3.f;
-
 
 			if (i == 8)
 			{
@@ -154,8 +148,6 @@ public:
 		return vector[0].getRadius();
 
 	}
-
-
 };
 
 class SFMLFrontEnd
@@ -185,8 +177,6 @@ private:
 		instructionsDisplay.setString("This project has been designed to recreate an enigma machine. To start drag a rotor in each\n slot,then click on the rotor to set each individual rotors position. Configure the plugboard by\n swapping each letter in the desired letter. If your decrypting a message select, decrypt.\n Use your physical keyboard to type. Once you have typed a letter, note the letter which\n  flashes on the lampboard. You have now encrypted a letter.");
 		instructionsDisplay.setPosition({ 5.f,200.f });
 		instructionsDisplay.setCharacterSize(21);
-
-
 		// run the program as long as the window is open
 		while (window.isOpen())
 		{
@@ -231,8 +221,6 @@ private:
 		{
 			window.draw(textDisplay[i]);
 			window.draw(textDisplayKeyBoard[i]);
-
-			
 		}
 		for (size_t i = 0; i < setup.GetSlots().size(); ++i)
 		{
@@ -281,15 +269,12 @@ public:
 		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
 		//initialization of the button values
 		Button instructions("Instructions", { 300.f,10.f }, "Text");
-		//sf::Texture textureInstructions("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
-		//sf::Sprite spriteInstructions(textureInstructions);
 		sf::Text textDisplayIns(font);
 		sf::RectangleShape instructionsRec(sf::Vector2(90.f,40.f));
 		instructionsRec.setPosition(sf::Vector2f(300.f, 10.f));
 		instructionsRec.setFillColor(sf::Color{ 43,40,38 });
 		instructionsRec.setOutlineColor(sf::Color{ 212,175,55 });
 		textDisplayIns.setString(instructions.ReturnString());
-		//spriteInstructions.setPosition(instructions.GetButtonPosition());
 		textDisplayIns.setPosition(sf::Vector2(305.0f,20.0f));
 		textDisplayIns.setFillColor(sf::Color::White);
 		
@@ -305,35 +290,17 @@ public:
 		textDisplay3.setFillColor(sf::Color{ 51,255,51 });
 		textDisplay3.setCharacterSize(15);
 
-
-		
-		//sf::Texture textureInstructions("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
-		//sf::Sprite spriteInstructions(textureInstructions);
 		sf::Text setupGUITEXT(font);
 		sf::RectangleShape setupGUI(sf::Vector2(90.f, 40.f));
 		setupGUI.setPosition(sf::Vector2f(600.f, 10.f));
 		setupGUI.setFillColor(sf::Color{ 43,40,38 });
 		setupGUITEXT.setOutlineColor(sf::Color{ 212,175,55 });
 		setupGUITEXT.setString("Setup GUI");
-		//spriteInstructions.setPosition(instructions.GetButtonPosition());
 		setupGUITEXT.setPosition(sf::Vector2(605.0f, 20.0f));
 		setupGUITEXT.setFillColor(sf::Color::White);
 
 		setupGUITEXT.setCharacterSize(15);
 
-
-
-		/*
-		Button encryptDec("Encrypt", { 600.f,10.f }, "Text");
-		sf::Texture encryptDecrypt("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
-		sf::Sprite encryptDecS(encryptDecrypt);
-		sf::Text textDisplay4(font);
-		textDisplay4.setString(encryptDec.ReturnString());
-		encryptDecS.setPosition(encryptDec.GetButtonPosition());
-		textDisplay4.setPosition(encryptDec.GetButtonPosition());
-		textDisplay4.setFillColor(sf::Color{ 51,255,51 });
-		textDisplay4.setCharacterSize(15);
-		*/
 		Button encryptDec("Encrypt", { 600.f,10.f }, "Text");
 		sf::Text textDisplay4(font);
 		sf::RectangleShape encryptRec(sf::Vector2(90.f, 40.f));
@@ -341,18 +308,13 @@ public:
 		encryptRec.setFillColor(sf::Color{ 43,40,38 });
 		encryptRec.setOutlineColor(sf::Color{ 212,175,55 });
 		textDisplay4.setString(encryptDec.ReturnString());
-		//spriteInstructions.setPosition(instructions.GetButtonPosition());
 		textDisplay4.setPosition(sf::Vector2(420.0f, 20.0f));
 		textDisplay4.setFillColor(sf::Color::White);
 
 		textDisplay4.setCharacterSize(15);
 
-
-
-		//initalization of the enigam machine
+		//initalization of the enigma machine
 		EnigmaMachine newEnigma;
-
-
 		//plugboard configuration
 		Rotor* rotorValues = new Rotor[3];
 		Rotor* firstval = rotorValues;

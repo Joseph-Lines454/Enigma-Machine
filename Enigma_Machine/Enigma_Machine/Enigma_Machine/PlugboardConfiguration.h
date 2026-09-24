@@ -22,9 +22,9 @@ private:
 
 
 	
-	float InitializeCircles(std::vector<sf::CircleShape>& vector, sf::Vector2f startPosition)
+	float InitializeCircles(std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& innercircle, sf::Vector2f startPosition)
 	{
-
+		sf::Vector2f innerCircleStartPos = startPosition;
 		for (int i = 0; i <= 25; i++)
 		{
 			vector.push_back(sf::CircleShape());
@@ -32,25 +32,56 @@ private:
 
 		for (int i = 0; i <= 25; i++)
 		{
-			vector[i].setRadius(27.f);
+			vector[i].setRadius(24.f);
 			vector[i].setPosition(startPosition);
-			vector[i].setFillColor(sf::Color(40, 40, 40));
-			vector[i].setOutlineThickness(2.f);
-			vector[i].setOutlineColor(sf::Color(180, 180, 180));
+			vector[i].setFillColor(sf::Color{ 255, 247, 228 });
+			//vector[i].setOutlineThickness(5.f);
+			//vector[i].setOutlineColor(sf::Color{ 189, 178, 161 });
 			startPosition.x = startPosition.x + vector[i].getRadius() * 3;
 
 			if (i == 8)
 			{
 
-				startPosition = { (vector[i].getRadius() * 2) + 28.f, startPosition.y + vector[i].getRadius() * 3 };
+				startPosition = { (vector[i].getRadius() * 2) + 65.f, startPosition.y + vector[i].getRadius() * 4 };
 
 
 			}
 			else if (i == 16)
 			{
-				startPosition = { 40.f, startPosition.y + vector[i].getRadius() * 3 };
+				startPosition = { 80.f, startPosition.y + vector[i].getRadius() * 4 };
 			}
 		}
+
+		startPosition = innerCircleStartPos;
+		startPosition.y = startPosition.y + 12.f;
+		startPosition.x = 92.f;
+		for (int i = 0; i <= 25; i++)
+		{
+			innercircle.push_back(sf::CircleShape());
+		}
+
+		for (int i = 0; i <= 25; i++)
+		{
+			innercircle[i].setRadius(12.f);
+			innercircle[i].setPosition(startPosition);
+			innercircle[i].setFillColor(sf::Color::Black);
+			//innercircle[i].setOutlineThickness(5.f);
+			//innercircle[i].setOutlineColor(sf::Color{ 189, 178, 161 });
+			startPosition.x = startPosition.x + vector[i].getRadius() * 3;
+
+			if (i == 8)
+			{
+
+				startPosition = { 125.f, startPosition.y + vector[i].getRadius() * 4 };
+
+
+			}
+			else if (i == 16)
+			{
+				startPosition = { 92.f, startPosition.y + vector[i].getRadius() * 4 };
+			}
+		}
+
 
 		return vector[0].getRadius();
 
@@ -66,7 +97,7 @@ private:
 		for (int i = 0; i <= 25; i++)
 		{
 
-			text[i].setFillColor(sf::Color{ 230,255,215 });
+			text[i].setFillColor(sf::Color::White);
 			//casting to float 
 			text[i].setPosition(startPosition);
 			startPosition.x = startPosition.x + circleRadius * 3.f;
@@ -74,14 +105,11 @@ private:
 
 			if (i == 8)
 			{
-
-				startPosition = { (circleRadius * 2.95f) + 20.f, startPosition.y + circleRadius * 3 };
-
-
+				startPosition = { (circleRadius * 2.95f) + 60.f, startPosition.y + circleRadius * 4 };
 			}
 			else if (i == 16)
 			{
-				startPosition = { (circleRadius + 35.f), startPosition.y + circleRadius * 3 };
+				startPosition = { (circleRadius + 70.f), startPosition.y + circleRadius * 4 };
 			}
 
 			text[i].setString(char(i + 65));
@@ -179,13 +207,18 @@ public:
 		}
 
 	}
-	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background,std::vector<sf::CircleShape>& vector, std::vector<sf::Text>& textDisplay)
+	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background,std::vector<sf::CircleShape>& vector, std::vector<sf::Text>& textDisplay, sf::RectangleShape& rect, std::vector<sf::CircleShape>& innerCircle)
 	{
 		window.draw(background);
+		window.draw(rect);
 		window.draw(textDisplayTitle);
 		for (int i = 0; i < 26; i++)
 		{
 			window.draw(vector[i]);
+		}
+		for (int i = 0; i < 26; i++)
+		{
+			window.draw(innerCircle[i]);
 		}
 		for (int i = 0; i < 26; i++)
 		{
@@ -198,6 +231,7 @@ public:
 	{
 		std::vector<sf::CircleShape> vector;
 		std::vector<sf::Text> textDisplay;
+		std::vector<sf::CircleShape> innercircle;
 		sf::RenderWindow window;
 		window.create(sf::VideoMode({ 800, 600 }), "Plugboard Configuration");
 		sf::Font font;
@@ -207,6 +241,13 @@ public:
 		sf::Sprite background(backgroundTexture);
 		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
 
+
+		sf::RectangleShape rect(sf::Vector2f(700.f, 360.f));
+		rect.setPosition(sf::Vector2f(45.f, 150.f));
+		rect.setFillColor(sf::Color{50, 49, 45});
+		//rect.setOutlineThickness(3.f);
+		//rect.setOutlineColor(sf::Color(160, 130, 80));
+
 		sf::Text textDisplayTitle(font);
 		textDisplayTitle.setString("Plugboard");
 
@@ -214,10 +255,10 @@ public:
 		textDisplayTitle.setPosition({ 350.f,0 });
 		textDisplayTitle.setCharacterSize(24);
 
-		InitializeText(textDisplay, { 65.f,static_cast<float>(window.getSize().y) / 3.3f }, font, InitializeCircles(vector, { 50.f,static_cast<float>(window.getSize().y) / 2.7f }));
+		InitializeText(textDisplay, { 95.f,static_cast<float>(window.getSize().y) / 3.3f }, font, InitializeCircles(vector, innercircle, { 80.f,static_cast<float>(window.getSize().y) / 2.7f }));
 		while (window.isOpen())
 		{
-			RenderValues(window, textDisplayTitle, background, vector,textDisplay);
+			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle);
 		}
 	}
 
