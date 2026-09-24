@@ -256,9 +256,80 @@ public:
 		textDisplayTitle.setCharacterSize(24);
 
 		InitializeText(textDisplay, { 95.f,static_cast<float>(window.getSize().y) / 3.3f }, font, InitializeCircles(vector, innercircle, { 80.f,static_cast<float>(window.getSize().y) / 2.7f }));
+		
+		int pos1Val = NULL;
+		int pos2Val = NULL;
+
+		bool pos1ValBool = false;
+		bool pos2ValBool = false;
+
+
 		while (window.isOpen())
 		{
 			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle);
+			
+			
+			//detecting if the user has actually selected any of the plugboard values
+			while (const std::optional event = window.pollEvent())
+			{
+				if (const auto* mousepress = event->getIf<sf::Event::MouseButtonPressed>())
+				{
+					for (int i = 0; i < vector.size(); i++)
+					{
+						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+						{
+							//first value, then second value we need to set we then need to update the outer value
+							vector[i].setOutlineThickness(3.f);
+							
+							if (pos1ValBool == true && pos2ValBool == true)
+							{
+								vector[pos1Val].setOutlineColor(sf::Color{ 255, 247, 228 });
+								vector[pos2Val].setOutlineColor(sf::Color{ 255, 247, 228 });
+								vector[pos1Val].setOutlineThickness(0.f);
+								vector[pos2Val].setOutlineThickness(0.f);
+								pos1ValBool = false;
+								pos2ValBool = false;
+							}
+							else if (pos1ValBool == false)
+							{
+								pos1Val = i;
+								vector[i].setOutlineColor(sf::Color::Red);
+								pos1ValBool = true;
+							}
+							
+							else if (pos1ValBool == true && pos1Val == i)
+							{
+								pos1Val = NULL;
+								pos1ValBool = false;
+								vector[i].setOutlineColor(sf::Color{ 255, 247, 228 });
+							}
+							else if (pos2ValBool == false && pos1ValBool == true)
+							{
+								pos2Val = i;
+								vector[i].setOutlineColor(sf::Color::Red);
+								pos2ValBool = true;
+							}
+							else if (pos2ValBool == true && pos2Val == i && pos1ValBool == true)
+							{
+								pos2Val = NULL;
+								pos2ValBool = false;
+								vector[i].setOutlineThickness(0.f);
+								vector[i].setOutlineColor(sf::Color{ 255, 247, 228 });
+							}
+							
+							
+							std::cout << "Pos1Val: " << pos1Val << " Pos2Val: " << pos2Val << std::endl;
+
+
+
+							// need a button that says pair, then takes these values and we create a line between each of the values
+						}
+					}
+				}
+			}
+			
+
+
 		}
 	}
 
