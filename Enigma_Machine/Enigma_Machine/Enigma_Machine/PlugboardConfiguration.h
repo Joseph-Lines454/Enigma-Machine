@@ -20,7 +20,24 @@ private:
 	char plugboardSettings[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 	char plugboardSettingsOrigonal[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 
+	struct Lines {
+		sf::VertexArray line;
+		char intialCharacter;
+		char newCharacter;
+		sf::RectangleShape SquareOne;
+		sf::RectangleShape SquareTwo;
+		Lines(sf::VertexArray line, char initalCharacter, char newCharacter)
+		{
+			std::cout << "Does this RUN?" << std::endl;
+			this->line = line;
+			this->intialCharacter = initalCharacter;
+			this->newCharacter = newCharacter;
+		}
 
+
+	};
+
+	std::vector<Lines> LinesVect;
 	
 	float InitializeCircles(std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& innercircle, sf::Vector2f startPosition)
 	{
@@ -35,16 +52,11 @@ private:
 			vector[i].setRadius(24.f);
 			vector[i].setPosition(startPosition);
 			vector[i].setFillColor(sf::Color{ 255, 247, 228 });
-			//vector[i].setOutlineThickness(5.f);
-			//vector[i].setOutlineColor(sf::Color{ 189, 178, 161 });
 			startPosition.x = startPosition.x + vector[i].getRadius() * 3;
 
 			if (i == 8)
 			{
-
 				startPosition = { (vector[i].getRadius() * 2) + 65.f, startPosition.y + vector[i].getRadius() * 4 };
-
-
 			}
 			else if (i == 16)
 			{
@@ -65,44 +77,31 @@ private:
 			innercircle[i].setRadius(12.f);
 			innercircle[i].setPosition(startPosition);
 			innercircle[i].setFillColor(sf::Color::Black);
-			//innercircle[i].setOutlineThickness(5.f);
-			//innercircle[i].setOutlineColor(sf::Color{ 189, 178, 161 });
 			startPosition.x = startPosition.x + vector[i].getRadius() * 3;
 
 			if (i == 8)
 			{
-
 				startPosition = { 125.f, startPosition.y + vector[i].getRadius() * 4 };
-
-
 			}
 			else if (i == 16)
 			{
 				startPosition = { 92.f, startPosition.y + vector[i].getRadius() * 4 };
 			}
 		}
-
-
 		return vector[0].getRadius();
-
 	}
 
 	void InitializeText(std::vector<sf::Text>& text, sf::Vector2f startPosition, sf::Font& font, float circleRadius)
 	{
 		for (int i = 0; i <= 25; i++)
 		{
-
 			text.push_back(sf::Text(font));
 		}
 		for (int i = 0; i <= 25; i++)
 		{
-
 			text[i].setFillColor(sf::Color::White);
-			//casting to float 
 			text[i].setPosition(startPosition);
 			startPosition.x = startPosition.x + circleRadius * 3.f;
-
-
 			if (i == 8)
 			{
 				startPosition = { (circleRadius * 2.95f) + 60.f, startPosition.y + circleRadius * 4 };
@@ -111,15 +110,9 @@ private:
 			{
 				startPosition = { (circleRadius + 70.f), startPosition.y + circleRadius * 4 };
 			}
-
 			text[i].setString(char(i + 65));
-
-
 		}
 	}
-
-
-
 public:
 
 	int PlugboardSettings()
@@ -131,12 +124,9 @@ public:
 
 		while (true)
 		{
-			
 			//reseting to the start of the array
 			*plugboardSettings = *plugboardsettingstemp;
 			std::cout << "Please enter your plugboard settings" << std::endl;
-
-
 
 			std::cout << "First letter" << std::endl;
 			std::cin >> letter1;
@@ -188,18 +178,14 @@ public:
 	//Gets the value which corresponds to the users input
 	int GetPlugboardConfigurationsVals(int value, bool val1)
 	{
-		
 		for (int i = 0; i < 26; i++)
 		{
-			
-
 			if ((char)(value + 97) == plugboardSettingsOrigonal[i] && val1 == true)
 			{
 
 				return (int)plugboardSettings[i];
 			}
 
-			
 			else if ((char)(value + 97) == plugboardSettings[i] && val1 == false)
 			{
 				return (int)plugboardSettingsOrigonal[i];
@@ -228,9 +214,35 @@ public:
 		{
 			window.draw(textDisplay[i]);
 		}
+		//drawing each line to the window
+		for (int i = 0; i < LinesVect.size(); i++)
+		{
+			window.draw(LinesVect[i].line);
+		}
 		window.display();
 	}
-	// we need to go over the plugboard settings and potentially change structure of program to make sure that the correct values are being sent to the engima machine code
+	// I need to go over the plugboard settings and potentially change structure of program to make sure that the correct values are being sent to the engima machine code
+
+
+	//we need to create an object which tracks the lines, so maybe a struct with the line fucntion within, then we write an external function at the end to convert back to the char arrays?
+	void DrawLines(std::vector<sf::CircleShape>& vector, int Letter1, int Letter2)
+	{
+		
+		// This is where we create the new connection
+		
+		//setting up the new line vairable
+		sf::VertexArray line(sf::PrimitiveType::Lines, 2);
+
+		line[0].position = vector[Letter1].getPosition();
+		line[0].color = sf::Color::Blue;
+
+		line[1].position = vector[Letter2].getPosition();
+		line[1].color = sf::Color::Blue;
+		
+		//adding a new line and the starting letters to the program
+		LinesVect.push_back(Lines(line, Letter1, Letter2));
+	}
+
 	void SetupPlugboard()
 	{
 		std::vector<sf::CircleShape> vector;
@@ -245,12 +257,9 @@ public:
 		sf::Sprite background(backgroundTexture);
 		background.setScale({ 800.f / backgroundTexture.getSize().x , 1000.f / backgroundTexture.getSize().y });
 
-
 		sf::RectangleShape rect(sf::Vector2f(700.f, 360.f));
 		rect.setPosition(sf::Vector2f(45.f, 150.f));
 		rect.setFillColor(sf::Color{50, 49, 45});
-		//rect.setOutlineThickness(3.f);
-		//rect.setOutlineColor(sf::Color(160, 130, 80));
 
 		sf::Text textDisplayTitle(font);
 		textDisplayTitle.setString("Plugboard");
@@ -258,7 +267,6 @@ public:
 		textDisplayTitle.setFont(font);
 		textDisplayTitle.setPosition({ 350.f,0 });
 		textDisplayTitle.setCharacterSize(24);
-
 
 		sf::Text plugboardCreatePair(font);
 		sf::RectangleShape plugboardCreatePairRect(sf::Vector2(90.f, 40.f));
@@ -280,8 +288,6 @@ public:
 		plugboardDeletePair.setFillColor(sf::Color::White);
 		plugboardDeletePair.setCharacterSize(15);
 
-
-
 		InitializeText(textDisplay, { 95.f,static_cast<float>(window.getSize().y) / 3.3f }, font, InitializeCircles(vector, innercircle, { 80.f,static_cast<float>(window.getSize().y) / 2.7f }));
 		
 		int pos1Val = NULL;
@@ -290,21 +296,26 @@ public:
 		bool pos1ValBool = false;
 		bool pos2ValBool = false;
 
-
 		//two buttons, pair and remove pair
-
-
-
 		while (window.isOpen())
 		{
 			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
-			
 			
 			//detecting if the user has actually selected any of the plugboard values
 			while (const std::optional event = window.pollEvent())
 			{
 				if (const auto* mousepress = event->getIf<sf::Event::MouseButtonPressed>())
 				{
+					//Checking if one of the letters has been pressed - this is unfortunatly going to have alot of nested statements, but can do anything about that because of SFML's makeup
+
+					// new to make sure that
+					if (mousepress->button == sf::Mouse::Button::Left && plugboardCreatePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (pos1Val != NULL && pos2Val != NULL))
+					{
+						// draw a line when the user clicks create pair, export to external function
+						DrawLines(vector, pos1Val, pos2Val);
+						RenderValues(window, textDisplayTitle, background, vector, textDisplay, rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
+					}
+
 					for (int i = 0; i < vector.size(); i++)
 					{
 						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
@@ -350,8 +361,6 @@ public:
 							
 							
 							std::cout << "Pos1Val: " << pos1Val << " Pos2Val: " << pos2Val << std::endl;
-
-
 
 							// need a button that says pair, then takes these values and we create a line between each of the values
 						}
