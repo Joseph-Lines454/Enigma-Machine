@@ -41,7 +41,7 @@ private:
 	};
 
 	std::vector<Lines> LinesVect;
-	
+	std::vector<sf::RectangleShape> Test;
 	float InitializeCircles(std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& innercircle, sf::Vector2f startPosition)
 	{
 		sf::Vector2f innerCircleStartPos = startPosition;
@@ -218,9 +218,13 @@ public:
 			window.draw(textDisplay[i]);
 		}
 		//drawing each line to the window
-		for (int i = 0; i < LinesVect.size(); i++)
+		//for (int i = 0; i < LinesVect.size(); i++)
+		//{
+		//	window.draw(LinesVect[i].line);
+		//}
+		for (int i = 0; i < Test.size(); i++)
 		{
-			window.draw(LinesVect[i].line);
+			window.draw(Test[i]);
 		}
 		window.display();
 	}
@@ -238,13 +242,21 @@ public:
 		std::cout << "Letter 1 Position: " << Letter1 << std::endl;
 		// the position code is basically making the line start at the center of the circle and end at the center of the other circle
 		line[0].position = { (vector[Letter1].getPosition().x + vector[Letter1].getRadius()),(vector[Letter1].getPosition().y + vector[Letter1].getRadius()) };
-		line[0].color = sf::Color::Blue;
-
+		line[0].color = sf::Color::Black;
+		
 		line[1].position = { (vector[Letter2].getPosition().x + vector[Letter2].getRadius()),(vector[Letter2].getPosition().y + vector[Letter2].getRadius()) };
 		line[1].color = sf::Color::Blue;
 		
+		// how can we conver this to sf rectangle?
+		// we are minusing the positon of the end and the start to get the size of the line
+		//sf::RectangleShape rect(sf::Vector2(((vector[Letter2].getPosition().x + vector[Letter2].getRadius()), (vector[Letter2].getPosition().y + vector[Letter2].getRadius())) - (vector[Letter1].getPosition().x + vector[Letter1].getRadius()), 4.f));
+		sf::RectangleShape rect(sf::Vector2(((vector[Letter2].getPosition().x), (vector[Letter2].getPosition().y + vector[Letter2].getRadius())) - (vector[Letter1].getPosition().x + vector[Letter1].getRadius()), 4.f));
+		rect.setPosition({ (vector[Letter1].getPosition().x + vector[Letter1].getRadius()), (vector[Letter1].getPosition().y + vector[Letter1].getRadius()) });
+		rect.setFillColor(sf::Color::Black);
+
 		//adding a new line and the starting letters to the program
 		LinesVect.push_back(Lines(line, Letter1, Letter2));
+		Test.push_back(rect);
 	}
 
 	void SetupPlugboard()
@@ -312,7 +324,6 @@ public:
 				{
 					//Checking if one of the letters has been pressed - this is unfortunatly going to have alot of nested statements, but can do anything about that because of SFML's makeup
 
-					// new to make sure that
 					if (mousepress->button == sf::Mouse::Button::Left && plugboardCreatePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (pos1ValBool != false && pos2ValBool != false))
 					{
 						// draw a line when the user clicks create pair, export to external function
@@ -326,7 +337,6 @@ public:
 
 					for (int i = 0; i < vector.size(); i++)
 					{
-						// not detecting A?
 						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							//first value, then second value we need to set we then need to update the outer value
@@ -367,9 +377,6 @@ public:
 								vector[i].setOutlineThickness(0.f);
 								vector[i].setOutlineColor(sf::Color{ 255, 247, 228 });
 							}		
-							
-
-							// need a button that says pair, then takes these values and we create a line between each of the values
 						}
 					}
 				}
