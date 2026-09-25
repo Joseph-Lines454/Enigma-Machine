@@ -314,7 +314,7 @@ public:
 						rotor2Select = false;
 						rotor3Select = true;
 					}
-					else if (mousepress->button == sf::Mouse::Button::Left && button.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (rotorInput1.getString() != rotorInput2.getString() && rotorInput2.getString() != rotorInput3.getString()) && (rotorInput1.getString() !=  "" && rotorInput2.getString() != "" && rotorInput3.getString() != ""))
+					else if (mousepress->button == sf::Mouse::Button::Left && button.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (rotorInput1.getString() != rotorInput2.getString() && rotorInput2.getString() != rotorInput3.getString()) && (rotorInput1.getString() !=  "" && rotorInput2.getString() != "" && rotorInput3.getString() != "") && (rotorInput1.getString() != rotorInput3.getString()))
 					{
 						std::cout << "All conditions have been met!" << std::endl;
 						//so the rotors values have all been set but not the order at this point...

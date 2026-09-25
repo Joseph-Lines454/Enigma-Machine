@@ -207,11 +207,15 @@ public:
 		}
 
 	}
-	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background,std::vector<sf::CircleShape>& vector, std::vector<sf::Text>& textDisplay, sf::RectangleShape& rect, std::vector<sf::CircleShape>& innerCircle)
+	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background,std::vector<sf::CircleShape>& vector, std::vector<sf::Text>& textDisplay, sf::RectangleShape& rect, std::vector<sf::CircleShape>& innerCircle, sf::RectangleShape& plugboardCreatePairRect, sf::Text& plugboardCreatePair, sf::RectangleShape& plugboardDeletePairRect, sf::Text& plugboardDeletePair)
 	{
 		window.draw(background);
 		window.draw(rect);
 		window.draw(textDisplayTitle);
+		window.draw(plugboardCreatePairRect);
+		window.draw(plugboardCreatePair);
+		window.draw(plugboardDeletePairRect);
+		window.draw(plugboardDeletePair);
 		for (int i = 0; i < 26; i++)
 		{
 			window.draw(vector[i]);
@@ -255,6 +259,29 @@ public:
 		textDisplayTitle.setPosition({ 350.f,0 });
 		textDisplayTitle.setCharacterSize(24);
 
+
+		sf::Text plugboardCreatePair(font);
+		sf::RectangleShape plugboardCreatePairRect(sf::Vector2(90.f, 40.f));
+		plugboardCreatePairRect.setPosition(sf::Vector2f(600.f, 550.f));
+		plugboardCreatePairRect.setFillColor(sf::Color{ 43,40,38 });
+		plugboardCreatePair.setOutlineColor(sf::Color{ 212,175,55 });
+		plugboardCreatePair.setString("Create Pair");
+		plugboardCreatePair.setPosition(sf::Vector2(605.0f, 560.0f));
+		plugboardCreatePair.setFillColor(sf::Color::White);
+		plugboardCreatePair.setCharacterSize(15);
+
+		sf::Text plugboardDeletePair(font);
+		sf::RectangleShape plugboardDeletePairRect(sf::Vector2(90.f, 40.f));
+		plugboardDeletePairRect.setPosition(sf::Vector2f(100.f, 550.f));
+		plugboardDeletePairRect.setFillColor(sf::Color{ 43,40,38 });
+		plugboardDeletePair.setOutlineColor(sf::Color{ 212,175,55 });
+		plugboardDeletePair.setString("Delete Pair");
+		plugboardDeletePair.setPosition(sf::Vector2(105.0f, 560.0f));
+		plugboardDeletePair.setFillColor(sf::Color::White);
+		plugboardDeletePair.setCharacterSize(15);
+
+
+
 		InitializeText(textDisplay, { 95.f,static_cast<float>(window.getSize().y) / 3.3f }, font, InitializeCircles(vector, innercircle, { 80.f,static_cast<float>(window.getSize().y) / 2.7f }));
 		
 		int pos1Val = NULL;
@@ -264,9 +291,13 @@ public:
 		bool pos2ValBool = false;
 
 
+		//two buttons, pair and remove pair
+
+
+
 		while (window.isOpen())
 		{
-			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle);
+			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
 			
 			
 			//detecting if the user has actually selected any of the plugboard values
