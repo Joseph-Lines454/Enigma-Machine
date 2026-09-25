@@ -26,12 +26,15 @@ private:
 		char newCharacter;
 		sf::RectangleShape SquareOne;
 		sf::RectangleShape SquareTwo;
-		Lines(sf::VertexArray line, char initalCharacter, char newCharacter)
+		Lines(sf::VertexArray line, int initalCharacter, int newCharacter)
 		{
 			std::cout << "Does this RUN?" << std::endl;
 			this->line = line;
-			this->intialCharacter = initalCharacter;
-			this->newCharacter = newCharacter;
+			this->intialCharacter = initalCharacter + 97;
+			this->newCharacter = newCharacter + 97;
+			std::cout << "Inital Character: " << this->intialCharacter << " New Character: " << this->newCharacter << std::endl;
+
+
 		}
 
 
@@ -232,11 +235,12 @@ public:
 		
 		//setting up the new line vairable
 		sf::VertexArray line(sf::PrimitiveType::Lines, 2);
-
-		line[0].position = vector[Letter1].getPosition();
+		std::cout << "Letter 1 Position: " << Letter1 << std::endl;
+		// the position code is basically making the line start at the center of the circle and end at the center of the other circle
+		line[0].position = { (vector[Letter1].getPosition().x + vector[Letter1].getRadius()),(vector[Letter1].getPosition().y + vector[Letter1].getRadius()) };
 		line[0].color = sf::Color::Blue;
 
-		line[1].position = vector[Letter2].getPosition();
+		line[1].position = { (vector[Letter2].getPosition().x + vector[Letter2].getRadius()),(vector[Letter2].getPosition().y + vector[Letter2].getRadius()) };
 		line[1].color = sf::Color::Blue;
 		
 		//adding a new line and the starting letters to the program
@@ -309,15 +313,20 @@ public:
 					//Checking if one of the letters has been pressed - this is unfortunatly going to have alot of nested statements, but can do anything about that because of SFML's makeup
 
 					// new to make sure that
-					if (mousepress->button == sf::Mouse::Button::Left && plugboardCreatePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (pos1Val != NULL && pos2Val != NULL))
+					if (mousepress->button == sf::Mouse::Button::Left && plugboardCreatePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (pos1ValBool != false && pos2ValBool != false))
 					{
 						// draw a line when the user clicks create pair, export to external function
 						DrawLines(vector, pos1Val, pos2Val);
+						vector[pos2Val].setOutlineThickness(0.f);
+						vector[pos1Val].setOutlineThickness(0.f);
+						pos1Val = NULL;
+						pos2Val = NULL;
 						RenderValues(window, textDisplayTitle, background, vector, textDisplay, rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
 					}
 
 					for (int i = 0; i < vector.size(); i++)
 					{
+						// not detecting A?
 						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							//first value, then second value we need to set we then need to update the outer value
@@ -357,19 +366,14 @@ public:
 								pos2ValBool = false;
 								vector[i].setOutlineThickness(0.f);
 								vector[i].setOutlineColor(sf::Color{ 255, 247, 228 });
-							}
+							}		
 							
-							
-							std::cout << "Pos1Val: " << pos1Val << " Pos2Val: " << pos2Val << std::endl;
 
 							// need a button that says pair, then takes these values and we create a line between each of the values
 						}
 					}
 				}
 			}
-			
-
-
 		}
 	}
 
