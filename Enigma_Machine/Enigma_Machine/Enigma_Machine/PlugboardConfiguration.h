@@ -33,15 +33,11 @@ private:
 			this->intialCharacter = initalCharacter + 97;
 			this->newCharacter = newCharacter + 97;
 			std::cout << "Inital Character: " << this->intialCharacter << " New Character: " << this->newCharacter << std::endl;
-
-
 		}
 
 
 	};
-
-	std::vector<Lines> LinesVect;
-	std::vector<sf::RectangleShape> Test;
+	std::vector<sf::RectangleShape> LinesVect;
 	float InitializeCircles(std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& innercircle, sf::Vector2f startPosition)
 	{
 		sf::Vector2f innerCircleStartPos = startPosition;
@@ -222,9 +218,9 @@ public:
 		//{
 		//	window.draw(LinesVect[i].line);
 		//}
-		for (int i = 0; i < Test.size(); i++)
+		for (int i = 0; i < LinesVect.size(); i++)
 		{
-			window.draw(Test[i]);
+			window.draw(LinesVect[i]);
 		}
 		window.display();
 	}
@@ -234,29 +230,23 @@ public:
 	//we need to create an object which tracks the lines, so maybe a struct with the line fucntion within, then we write an external function at the end to convert back to the char arrays?
 	void DrawLines(std::vector<sf::CircleShape>& vector, int Letter1, int Letter2)
 	{
+		sf::Vector2f Point_A(vector[Letter1].getPosition().x + vector[Letter1].getRadius(),vector[Letter1].getPosition().y + vector[Letter1].getRadius());
+		sf::Vector2f Point_B(vector[Letter2].getPosition().x + vector[Letter2].getRadius(),vector[Letter2].getPosition().y + vector[Letter2].getRadius());
+		// Calculating length (Pythagorean Theorem) - Point A and Point B - short sides
+		sf::Vector2f direction = Point_B - Point_A;
 		
-		// This is where we create the new connection
+		// formula for the hypotenuse is Square Root of Point_A(Squared) * Point_B(Squared)
+		float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 		
-		//setting up the new line vairable
-		sf::VertexArray line(sf::PrimitiveType::Lines, 2);
-		std::cout << "Letter 1 Position: " << Letter1 << std::endl;
-		// the position code is basically making the line start at the center of the circle and end at the center of the other circle
-		line[0].position = { (vector[Letter1].getPosition().x + vector[Letter1].getRadius()),(vector[Letter1].getPosition().y + vector[Letter1].getRadius()) };
-		line[0].color = sf::Color::Black;
-		
-		line[1].position = { (vector[Letter2].getPosition().x + vector[Letter2].getRadius()),(vector[Letter2].getPosition().y + vector[Letter2].getRadius()) };
-		line[1].color = sf::Color::Blue;
-		
-		// how can we conver this to sf rectangle?
-		// we are minusing the positon of the end and the start to get the size of the line
-		//sf::RectangleShape rect(sf::Vector2(((vector[Letter2].getPosition().x + vector[Letter2].getRadius()), (vector[Letter2].getPosition().y + vector[Letter2].getRadius())) - (vector[Letter1].getPosition().x + vector[Letter1].getRadius()), 4.f));
-		sf::RectangleShape rect(sf::Vector2(((vector[Letter2].getPosition().x), (vector[Letter2].getPosition().y + vector[Letter2].getRadius())) - (vector[Letter1].getPosition().x + vector[Letter1].getRadius()), 4.f));
-		rect.setPosition({ (vector[Letter1].getPosition().x + vector[Letter1].getRadius()), (vector[Letter1].getPosition().y + vector[Letter1].getRadius()) });
+		//calculating the angle in degrees - converting from radians to degrees
+		float angle = std::atan2(direction.y, direction.x) * 180.f / 3.1415f;
+		sf::Angle Angle = sf::degrees(std::atan2(direction.y, direction.x) * 180.f / 3.14159265f);
+		sf::RectangleShape rect(sf::Vector2f(length, 4.f));
+		rect.setPosition(Point_A);
+		rect.setRotation(Angle);
 		rect.setFillColor(sf::Color::Black);
-
 		//adding a new line and the starting letters to the program
-		LinesVect.push_back(Lines(line, Letter1, Letter2));
-		Test.push_back(rect);
+		LinesVect.push_back(rect);
 	}
 
 	void SetupPlugboard()

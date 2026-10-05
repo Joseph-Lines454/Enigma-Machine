@@ -371,18 +371,11 @@ public:
 		}
 	}
 
-	
-
-
 	void DetectInputAndAlter(const sf::Event::MouseButtonPressed* mousepress,Rotor* findRotor, sf::RenderWindow& window)
 	{
 		//This works - updating of the values
-		
-
-
 		for (Rotor* i = findRotor; i <= findRotor + 2; i++)
 		{
-
 			if (mousepress->button == sf::Mouse::Button::Left && i->GetBackgroundWhole().getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 			{
 				i->SetRotorPosition();
@@ -398,23 +391,15 @@ public:
 		Rotor* firstval = rotor;
 		std::vector<int> rotorNames;
 		Rotor* valAssign = rotor;
-
-
 		rotorNames.push_back(1);
 		rotor++;
-
 		rotorNames.push_back(2);
 		rotor++;
 		rotorNames.push_back(3);
 		rotor = firstval;
 
-
-		
 		std::cout << "Select which rotors you want in each slot From right to left" << std::endl;
-
 		int counter = 0;
-
-
 		//user set their rotor order
 		for (rotor; rotor <= (firstval + size - 1); rotor++)
 		{
