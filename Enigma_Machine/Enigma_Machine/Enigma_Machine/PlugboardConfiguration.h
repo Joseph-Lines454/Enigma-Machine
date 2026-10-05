@@ -6,6 +6,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/Audio.hpp>
+#include <algorithm>
+
 //configuraiton of the plugboard
 class PlugboardConfiguration
 {
@@ -45,8 +47,9 @@ private:
 		
 
 	};
-	std::vector<sf::RectangleShape> LinesVect;
+
 	std::vector<Lines> LineValues;
+	std::vector<int> noRenderList;
 	float InitializeCircles(std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& innercircle, sf::Vector2f startPosition)
 	{
 		sf::Vector2f innerCircleStartPos = startPosition;
@@ -141,10 +144,11 @@ private:
 		rect.setFillColor(sf::Color::Black);
 		//adding a new line and the starting letters to the program
 		LineValues.push_back(Lines(rect, Letter1, Letter2, vector[Letter1].getPosition(), vector[Letter2].getPosition()));
-		LinesVect.push_back(rect);
 	}
-	void HighLightLine(int LetterSelect)
+	void DeleteValues(int index)
 	{
+		//removing the index which we have decided to delete - this should not render now due to not being in the array
+		LineValues.erase(LineValues.begin() + index);
 		
 	}
 
@@ -239,16 +243,33 @@ public:
 		window.draw(plugboardDeletePair);
 		for (int i = 0; i < 26; i++)
 		{
-			window.draw(vector[i]);
+			
+			int cnt = std::count_if(LineValues.begin(), LineValues.end(),
+				[&](const Lines& vals) {
+					if (vals.intialCharacter == std::tolower(textDisplay[i].getString().toAnsiString()[0]) || vals.newCharacter == std::tolower(textDisplay[i].getString().toAnsiString()[0]))
+						return 1;
+						
+					return 0;
+				});
+			
+			if (cnt == 0)
+			{
+				window.draw(vector[i]);
+				window.draw(innerCircle[i]);
+				window.draw(textDisplay[i]);
+				auto findVal = std::find(noRenderList.begin(), noRenderList.end(), i);
+				if (findVal != noRenderList.end())
+				{
+					noRenderList.erase(findVal);
+				}
+			}
+			if (cnt == 1)
+			{
+				window.draw(textDisplay[i]);
+				noRenderList.push_back(i);
+			}
 		}
-		for (int i = 0; i < 26; i++)
-		{
-			window.draw(innerCircle[i]);
-		}
-		for (int i = 0; i < 26; i++)
-		{
-			window.draw(textDisplay[i]);
-		}
+		
 		for (int i = 0; i < LineValues.size(); i++)
 		{
 			window.draw(LineValues[i].line);
@@ -311,6 +332,11 @@ public:
 		bool pos1ValBool = false;
 		bool pos2ValBool = false;
 
+
+		int indexConnection = -1;
+		bool highlighted = false;
+
+
 		//two buttons, pair and remove pair
 		while (window.isOpen())
 		{
@@ -334,9 +360,35 @@ public:
 						RenderValues(window, textDisplayTitle, background, vector, textDisplay, rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
 					}
 
+					//checking if a line/square has been pressed, if so highlight red
+					for (int i = 0; i < LineValues.size(); i++)
+					{
+						
+						if (mousepress->button == sf::Mouse::Button::Left && (LineValues[i].line.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareOne.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareTwo.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))))
+						{
+							
+							LineValues[i].line.setFillColor(sf::Color::Red);
+							LineValues[i].SquareOne.setFillColor(sf::Color::Red);
+							LineValues[i].SquareTwo.setFillColor(sf::Color::Red);
+							highlighted = true;
+							indexConnection = i;
+						}
+					}
+
+					if (mousepress->button == sf::Mouse::Button::Left && plugboardDeletePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && highlighted == true)
+					{
+						// send the user to delete the pair, we need to reinstate the previous index values as well - also need a rerender
+						DeleteValues(indexConnection);
+						highlighted = false;
+						indexConnection = -1;
+					}
+
+
 					for (int i = 0; i < vector.size(); i++)
 					{
-						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+						//checking for a mouse press and making sure that the value is not on a norender list
+						//&& std::find(noRenderList.begin(), noRenderList.end(), i) != noRenderList.end()
+						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) )
 						{
 							//first value, then second value we need to set we then need to update the outer value
 							vector[i].setOutlineThickness(3.f);
