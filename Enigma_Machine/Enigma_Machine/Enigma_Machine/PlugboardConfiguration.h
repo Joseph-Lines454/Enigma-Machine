@@ -21,23 +21,32 @@ private:
 	char plugboardSettingsOrigonal[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 
 	struct Lines {
-		sf::VertexArray line;
+		sf::RectangleShape line;
 		char intialCharacter;
 		char newCharacter;
 		sf::RectangleShape SquareOne;
 		sf::RectangleShape SquareTwo;
-		Lines(sf::VertexArray line, int initalCharacter, int newCharacter)
+		
+		Lines(sf::RectangleShape line, int initalCharacter, int newCharacter, sf::Vector2f squarePosOne, sf::Vector2f squarePosTwo)
 		{
 			std::cout << "Does this RUN?" << std::endl;
 			this->line = line;
 			this->intialCharacter = initalCharacter + 97;
 			this->newCharacter = newCharacter + 97;
+			this->SquareOne.setSize({ 50.f, 65.f });
+			this->SquareOne.setPosition(squarePosOne);
+			this->SquareOne.setFillColor(sf::Color::Black);
+			this->SquareTwo.setSize({ 50.f, 65.f });
+			this->SquareTwo.setPosition(squarePosTwo);
+			this->SquareTwo.setFillColor(sf::Color::Black);
 			std::cout << "Inital Character: " << this->intialCharacter << " New Character: " << this->newCharacter << std::endl;
 		}
-
+		//delete functionality
+		
 
 	};
 	std::vector<sf::RectangleShape> LinesVect;
+	std::vector<Lines> LineValues;
 	float InitializeCircles(std::vector<sf::CircleShape>& vector, std::vector<sf::CircleShape>& innercircle, sf::Vector2f startPosition)
 	{
 		sf::Vector2f innerCircleStartPos = startPosition;
@@ -112,6 +121,33 @@ private:
 			text[i].setString(char(i + 65));
 		}
 	}
+	//we need to create an object which tracks the lines, so maybe a struct with the line fucntion within, then we write an external function at the end to convert back to the char arrays?
+	void DrawLines(std::vector<sf::CircleShape>& vector, int Letter1, int Letter2)
+	{
+		sf::Vector2f Point_A(vector[Letter1].getPosition().x + vector[Letter1].getRadius(), vector[Letter1].getPosition().y + vector[Letter1].getRadius());
+		sf::Vector2f Point_B(vector[Letter2].getPosition().x + vector[Letter2].getRadius(), vector[Letter2].getPosition().y + vector[Letter2].getRadius());
+		// Calculating length (Pythagorean Theorem) - Point A and Point B - short sides
+		sf::Vector2f direction = Point_B - Point_A;
+
+		// formula for the hypotenuse is Square Root of Point_A(Squared) * Point_B(Squared)
+		float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+		//calculating the angle in degrees - converting from radians to degrees
+		float angle = std::atan2(direction.y, direction.x) * 180.f / 3.1415f;
+		sf::Angle Angle = sf::degrees(std::atan2(direction.y, direction.x) * 180.f / 3.14159265f);
+		sf::RectangleShape rect(sf::Vector2f(length, 4.f));
+		rect.setPosition(Point_A);
+		rect.setRotation(Angle);
+		rect.setFillColor(sf::Color::Black);
+		//adding a new line and the starting letters to the program
+		LineValues.push_back(Lines(rect, Letter1, Letter2, vector[Letter1].getPosition(), vector[Letter2].getPosition()));
+		LinesVect.push_back(rect);
+	}
+	void HighLightLine(int LetterSelect)
+	{
+		
+	}
+
 public:
 
 	int PlugboardSettings()
@@ -213,40 +249,13 @@ public:
 		{
 			window.draw(textDisplay[i]);
 		}
-		//drawing each line to the window
-		//for (int i = 0; i < LinesVect.size(); i++)
-		//{
-		//	window.draw(LinesVect[i].line);
-		//}
-		for (int i = 0; i < LinesVect.size(); i++)
+		for (int i = 0; i < LineValues.size(); i++)
 		{
-			window.draw(LinesVect[i]);
+			window.draw(LineValues[i].line);
+			window.draw(LineValues[i].SquareOne);
+			window.draw(LineValues[i].SquareTwo);
 		}
 		window.display();
-	}
-	// I need to go over the plugboard settings and potentially change structure of program to make sure that the correct values are being sent to the engima machine code
-
-
-	//we need to create an object which tracks the lines, so maybe a struct with the line fucntion within, then we write an external function at the end to convert back to the char arrays?
-	void DrawLines(std::vector<sf::CircleShape>& vector, int Letter1, int Letter2)
-	{
-		sf::Vector2f Point_A(vector[Letter1].getPosition().x + vector[Letter1].getRadius(),vector[Letter1].getPosition().y + vector[Letter1].getRadius());
-		sf::Vector2f Point_B(vector[Letter2].getPosition().x + vector[Letter2].getRadius(),vector[Letter2].getPosition().y + vector[Letter2].getRadius());
-		// Calculating length (Pythagorean Theorem) - Point A and Point B - short sides
-		sf::Vector2f direction = Point_B - Point_A;
-		
-		// formula for the hypotenuse is Square Root of Point_A(Squared) * Point_B(Squared)
-		float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-		
-		//calculating the angle in degrees - converting from radians to degrees
-		float angle = std::atan2(direction.y, direction.x) * 180.f / 3.1415f;
-		sf::Angle Angle = sf::degrees(std::atan2(direction.y, direction.x) * 180.f / 3.14159265f);
-		sf::RectangleShape rect(sf::Vector2f(length, 4.f));
-		rect.setPosition(Point_A);
-		rect.setRotation(Angle);
-		rect.setFillColor(sf::Color::Black);
-		//adding a new line and the starting letters to the program
-		LinesVect.push_back(rect);
 	}
 
 	void SetupPlugboard()
@@ -373,13 +382,5 @@ public:
 			}
 		}
 	}
-
-
-	//rendering the plugboard circles to the screen
-
-
-
-
-
 };
 
