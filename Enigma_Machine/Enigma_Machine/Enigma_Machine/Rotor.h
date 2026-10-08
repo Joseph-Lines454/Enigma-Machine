@@ -33,14 +33,7 @@ public:
 	}
 
 	void SetPositions(sf::Vector2f startingPos, sf::Font& font)
-	{
-
-		//we should also set the background for each rotor
-
-		// 3 new text objects
-		// 3 new background objects
-		//Each needs to be incremented downwards
-		
+	{	
 		backgroundWhole.setFillColor(sf::Color::Black);
 		backgroundWhole.setPosition({startingPos.x - 60.f, startingPos.y - 20.0f});
 		backgroundWhole.setSize({ 110.0f, 180.0f });

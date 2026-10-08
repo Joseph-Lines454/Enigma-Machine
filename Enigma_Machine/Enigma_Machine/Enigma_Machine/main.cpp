@@ -87,7 +87,6 @@ public:
 		}
 		for (int i = 0; i <= 25; i++)
 		{
-
 			text[i].setFillColor(sf::Color{ 230,255,215 });
 			//casting to float 
 			text[i].setPosition(startPosition);
@@ -95,10 +94,7 @@ public:
 
 			if (i == 8)
 			{
-
 				startPosition = { (circleRadius * 2.95f) + 20.f, startPosition.y + circleRadius * 3 };
-
-
 			}
 			else if (i == 16)
 			{
@@ -134,10 +130,7 @@ public:
 
 			if (i == 8)
 			{
-
 				startPosition = { (vector[i].getRadius() * 2) + 28.f, startPosition.y + vector[i].getRadius() * 3 };
-
-
 			}
 			else if (i == 16)
 			{

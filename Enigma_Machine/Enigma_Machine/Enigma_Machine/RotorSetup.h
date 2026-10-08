@@ -409,10 +409,7 @@ public:
 			{
 				std::cout << rotorNames[i] << std::endl;
 			}
-
-
 			int rotorInput = 0;
-
 
 			//user selects the order of the rotors
 			std::cout << "What rotor would you like in the " << ++counter << " slot?" << std::endl;

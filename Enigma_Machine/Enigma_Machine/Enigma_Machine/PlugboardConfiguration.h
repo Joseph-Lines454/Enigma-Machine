@@ -363,16 +363,27 @@ public:
 					//checking if a line/square has been pressed, if so highlight red
 					for (int i = 0; i < LineValues.size(); i++)
 					{
-						
+						LineValues[i].line.setFillColor(sf::Color::Black);
+						LineValues[i].SquareOne.setFillColor(sf::Color::Black);
+						LineValues[i].SquareTwo.setFillColor(sf::Color::Black);
 						if (mousepress->button == sf::Mouse::Button::Left && (LineValues[i].line.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareOne.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareTwo.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))))
 						{
+							if (indexConnection != -1)
+							{
+								LineValues[indexConnection].line.setFillColor(sf::Color::Black);
+								LineValues[indexConnection].SquareOne.setFillColor(sf::Color::Black);
+								LineValues[indexConnection].SquareTwo.setFillColor(sf::Color::Black);
+							}
 							
+
 							LineValues[i].line.setFillColor(sf::Color::Red);
 							LineValues[i].SquareOne.setFillColor(sf::Color::Red);
 							LineValues[i].SquareTwo.setFillColor(sf::Color::Red);
 							highlighted = true;
 							indexConnection = i;
+							
 						}
+						
 					}
 
 					if (mousepress->button == sf::Mouse::Button::Left && plugboardDeletePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && highlighted == true)
