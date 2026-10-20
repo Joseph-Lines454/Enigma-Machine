@@ -343,8 +343,9 @@ public:
 						
 						else if (mousePress->button == sf::Mouse::Button::Left && setupGUI.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
-							Setup.SetupRotors(firstval);
+							
 							plugboard.SetupPlugboard();
+							Setup.SetupRotors(firstval);
 						}
 						
 						//Setup the enigma machine
@@ -390,6 +391,9 @@ public:
 								//performs the encrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								if (encrypt == true)
 								{
+									
+									
+
 									int pos = newEnigma.EncryptMenu(rotorValues, plugboard, static_cast<char>(i + 97)) - 97;
 									std::cout << char(pos + 97) << std::endl;
 
@@ -406,6 +410,8 @@ public:
 								//performs the decrypt proccess of the user input and lights up the bulb which corresponds to the enigma machines output
 								else if (encrypt == false)
 								{
+									//plugboard?
+
 									int pos = newEnigma.DecryptMenu(rotorValues, plugboard, static_cast<char>(i + 97)) - 97;
 									std::cout << char(pos + 97) << std::endl;
 									vector[pos].setFillColor(sf::Color(226, 203, 40));

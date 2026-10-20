@@ -20,7 +20,7 @@ private:
 	char quit = ' ';
 
 	char plugboardSettings[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
-	char plugboardSettingsOrigonal[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
+	char plugboardSettingsOrigonal[26] = { 'r','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 
 	struct Lines {
 		sf::RectangleShape line;
@@ -232,9 +232,11 @@ public:
 		}
 
 	}
-	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background,std::vector<sf::CircleShape>& vector, std::vector<sf::Text>& textDisplay, sf::RectangleShape& rect, std::vector<sf::CircleShape>& innerCircle, sf::RectangleShape& plugboardCreatePairRect, sf::Text& plugboardCreatePair, sf::RectangleShape& plugboardDeletePairRect, sf::Text& plugboardDeletePair)
+	void RenderValues(sf::RenderWindow& window, sf::Text& textDisplayTitle, sf::Sprite& background,std::vector<sf::CircleShape>& vector, std::vector<sf::Text>& textDisplay, sf::RectangleShape& rect, std::vector<sf::CircleShape>& innerCircle, sf::RectangleShape& plugboardCreatePairRect, sf::Text& plugboardCreatePair, sf::RectangleShape& plugboardDeletePairRect, sf::Text& plugboardDeletePair, sf::Text& renderTextNext, sf::RectangleShape& renderShapeNext)
 	{
 		window.draw(background);
+		window.draw(renderShapeNext);
+		window.draw(renderTextNext);
 		window.draw(rect);
 		window.draw(textDisplayTitle);
 		window.draw(plugboardCreatePairRect);
@@ -279,6 +281,28 @@ public:
 		window.display();
 	}
 
+	void SetPlugboardValues()
+	{
+		//getting the starting memory address for the pointers
+		char* plugboardsettingstemp = plugboardSettings;
+
+		int size = sizeof(plugboardSettings) / sizeof(plugboardSettings[0]);
+
+
+
+
+		for (int i = 0; i < LineValues.size(); i++)
+		{
+			*plugboardSettings = *plugboardsettingstemp;
+			//making the connection between letters
+			LettersSwap(LineValues[i].intialCharacter, LineValues[i].newCharacter, plugboardSettings, size);
+
+			std::cout << " Inital Character: " << LineValues[i].intialCharacter << " New Character: " << LineValues[i].newCharacter << std::endl;
+		}
+		PlugboardConfigurationsPrint(plugboardSettings);
+	}
+
+
 	void SetupPlugboard()
 	{
 		std::vector<sf::CircleShape> vector;
@@ -306,11 +330,11 @@ public:
 
 		sf::Text plugboardCreatePair(font);
 		sf::RectangleShape plugboardCreatePairRect(sf::Vector2(90.f, 40.f));
-		plugboardCreatePairRect.setPosition(sf::Vector2f(600.f, 550.f));
+		plugboardCreatePairRect.setPosition(sf::Vector2f(500.f, 550.f));
 		plugboardCreatePairRect.setFillColor(sf::Color{ 43,40,38 });
 		plugboardCreatePair.setOutlineColor(sf::Color{ 212,175,55 });
 		plugboardCreatePair.setString("Create Pair");
-		plugboardCreatePair.setPosition(sf::Vector2(605.0f, 560.0f));
+		plugboardCreatePair.setPosition(sf::Vector2(505.0f, 560.0f));
 		plugboardCreatePair.setFillColor(sf::Color::White);
 		plugboardCreatePair.setCharacterSize(15);
 
@@ -324,6 +348,18 @@ public:
 		plugboardDeletePair.setFillColor(sf::Color::White);
 		plugboardDeletePair.setCharacterSize(15);
 
+		// Button which moves onto next screen
+
+		sf::Text nextText(font);
+		sf::RectangleShape nextShape(sf::Vector2(90.f, 40.f));
+		nextShape.setPosition(sf::Vector2f(600.f, 550.f));
+		nextShape.setFillColor(sf::Color{ 43,40,38 });
+		nextText.setOutlineColor(sf::Color{ 212,175,55 });
+		nextText.setString("Next");
+		nextText.setPosition(sf::Vector2(610.0f, 560.0f));
+		nextText.setFillColor(sf::Color::White);
+		nextText.setCharacterSize(15);
+
 		InitializeText(textDisplay, { 95.f,static_cast<float>(window.getSize().y) / 3.3f }, font, InitializeCircles(vector, innercircle, { 80.f,static_cast<float>(window.getSize().y) / 2.7f }));
 		
 		int pos1Val = NULL;
@@ -332,7 +368,6 @@ public:
 		bool pos1ValBool = false;
 		bool pos2ValBool = false;
 
-
 		int indexConnection = -1;
 		bool highlighted = false;
 
@@ -340,15 +375,19 @@ public:
 		//two buttons, pair and remove pair
 		while (window.isOpen())
 		{
-			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
+			RenderValues(window, textDisplayTitle, background, vector,textDisplay,rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair, nextText, nextShape);
 			
 			//detecting if the user has actually selected any of the plugboard values
 			while (const std::optional event = window.pollEvent())
 			{
+				if (event->is<sf::Event::Closed>())
+					window.close();
 				if (const auto* mousepress = event->getIf<sf::Event::MouseButtonPressed>())
 				{
 					//Checking if one of the letters has been pressed - this is unfortunatly going to have alot of nested statements, but can do anything about that because of SFML's makeup
 
+
+					
 					if (mousepress->button == sf::Mouse::Button::Left && plugboardCreatePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && (pos1ValBool != false && pos2ValBool != false))
 					{
 						// draw a line when the user clicks create pair, export to external function
@@ -357,7 +396,15 @@ public:
 						vector[pos1Val].setOutlineThickness(0.f);
 						pos1Val = NULL;
 						pos2Val = NULL;
-						RenderValues(window, textDisplayTitle, background, vector, textDisplay, rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair);
+						RenderValues(window, textDisplayTitle, background, vector, textDisplay, rect, innercircle, plugboardCreatePairRect, plugboardCreatePair, plugboardDeletePairRect, plugboardDeletePair,nextText, nextShape);
+					}
+
+					// we need to set the actual values for the plugboard configuration and also display a screen showing the user what to do next
+					if (mousepress->button == sf::Mouse::Button::Left && nextShape.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
+					{
+						// some error checking might be needed here
+						SetPlugboardValues();
+						window.close();
 					}
 
 					//checking if a line/square has been pressed, if so highlight red
@@ -366,7 +413,8 @@ public:
 						LineValues[i].line.setFillColor(sf::Color::Black);
 						LineValues[i].SquareOne.setFillColor(sf::Color::Black);
 						LineValues[i].SquareTwo.setFillColor(sf::Color::Black);
-						// (LineValues[i].line.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) ||
+						
+						//compares if the users mouse click is within the ends of each of the wires. From here the user is able to delete the wires
 						if (mousepress->button == sf::Mouse::Button::Left && LineValues[i].SquareOne.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareTwo.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							if (indexConnection != -1)
@@ -375,16 +423,13 @@ public:
 								LineValues[indexConnection].SquareOne.setFillColor(sf::Color::Black);
 								LineValues[indexConnection].SquareTwo.setFillColor(sf::Color::Black);
 							}
-							
-
 							LineValues[i].line.setFillColor(sf::Color::Red);
 							LineValues[i].SquareOne.setFillColor(sf::Color::Red);
 							LineValues[i].SquareTwo.setFillColor(sf::Color::Red);
 							highlighted = true;
 							indexConnection = i;
 							
-						}
-						
+						}	
 					}
 
 					if (mousepress->button == sf::Mouse::Button::Left && plugboardDeletePairRect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && highlighted == true)
@@ -399,7 +444,6 @@ public:
 					for (int i = 0; i < vector.size(); i++)
 					{
 						//checking for a mouse press and making sure that the value is not on a norender list
-						//&& std::find(noRenderList.begin(), noRenderList.end(), i) != noRenderList.end()
 						if (mousepress->button == sf::Mouse::Button::Left && vector[i].getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) )
 						{
 							//first value, then second value we need to set we then need to update the outer value

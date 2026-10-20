@@ -97,6 +97,7 @@ public:
 		Rotor* lastval = rotors;
 		lastval = lastval + 2;
 
+		
 
 		RevolutionCheck(rotors, 2);
 
@@ -124,8 +125,18 @@ public:
 		
 		Rotor* lastval = rotors;
 		lastval = lastval + 2;
-		RevolutionCheck(rotors, 2);
+		
+		
+		//checking rotor values
+		//for (Rotor* newVal = rotors; newVal != lastval; newVal++)
+		//{
+		//	std::cout << newVal->GetRotorRevolutionPositon() << std::endl;
+		//}
 
+		//return 'a';
+		
+		
+		RevolutionCheck(rotors, 2);
 
 		int numberresult = letter - 97;
 

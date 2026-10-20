@@ -57,11 +57,13 @@ private:
 			}
 		}
 		int count = 1;
+
+		/*
 		for (Rotor* i = copy; i <= End; i++)
 		{
 			std::cout << "Rotor number: " << i->GetRotorTitle() << "is now:" << i->GetPositionGUI() << std::endl;
 
-		}
+		}*/
 
 	}
 

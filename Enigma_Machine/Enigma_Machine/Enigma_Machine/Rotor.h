@@ -134,7 +134,7 @@ public:
 			{
 				// the second value within the vector contains the actual revolution position, therefore, we need to set the reovolution position to that
 				this->revolutionPositon = ((((std::stoi(textUpdate[i].getString().toAnsiString()))) - 1) % 26) + 1;
-				std::cout << this->revolutionPositon << std::endl;
+				//std::cout << this->revolutionPositon << std::endl;
 			}
 		}
 	}
