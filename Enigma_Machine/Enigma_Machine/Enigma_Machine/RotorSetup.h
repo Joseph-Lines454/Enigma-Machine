@@ -335,6 +335,7 @@ public:
 						//add an list here
 						std::cout << static_cast<char>(keyinput->unicode) << std::endl;
 						rotorInput1.setString(static_cast<char>(keyinput->unicode));
+						values[0].SetRotorValues(*VectorPointer[0]);
 						rotor1Select = false;
 
 						//values[0].SetPositionGUI(static_cast<int>(keyinput->unicode));
@@ -353,6 +354,8 @@ public:
 						rotor2Select = false;
 						values[1].SetPositionGUI(static_cast<int>(keyinput->unicode - U'0'));
 						values[1].SetRotorTitle(2);
+						// THIS CODE NEEDS TO BE REVIEWED - THERE COULD BE AN ISSUE REGARDING IF THE CMD DOES NOT MATCH THE GUI
+						values[1].SetRotorValues(*VectorPointer[1]);
 						std::cout << values[1].GetPositionGUI() << std::endl;
 					}
 					else if (rotor3Select == true && (keyinput->unicode == U'1' || keyinput->unicode == U'2' || keyinput->unicode == U'3')) {
@@ -364,6 +367,7 @@ public:
 						rotor3Select = false;
 						values[2].SetPositionGUI(static_cast<int>(keyinput->unicode - U'0'));
 						values[2].SetRotorTitle(3);
+						values[2].SetRotorValues(*VectorPointer[2]);
 						std::cout << values[2].GetPositionGUI() << std::endl;
 					}
 					CheckInputs(rotortextbox1, rotorInput1, rotortextbox2, rotorInput2, rotortextbox3, rotorInput3);
