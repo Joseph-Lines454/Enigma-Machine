@@ -366,7 +366,8 @@ public:
 						LineValues[i].line.setFillColor(sf::Color::Black);
 						LineValues[i].SquareOne.setFillColor(sf::Color::Black);
 						LineValues[i].SquareTwo.setFillColor(sf::Color::Black);
-						if (mousepress->button == sf::Mouse::Button::Left && (LineValues[i].line.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareOne.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareTwo.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))))
+						// (LineValues[i].line.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) ||
+						if (mousepress->button == sf::Mouse::Button::Left && LineValues[i].SquareOne.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) || LineValues[i].SquareTwo.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							if (indexConnection != -1)
 							{
@@ -394,7 +395,7 @@ public:
 						indexConnection = -1;
 					}
 
-
+					// highlighting for selecting the actual parts of the plugboard
 					for (int i = 0; i < vector.size(); i++)
 					{
 						//checking for a mouse press and making sure that the value is not on a norender list
