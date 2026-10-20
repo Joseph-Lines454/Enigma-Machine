@@ -97,8 +97,6 @@ public:
 		Rotor* lastval = rotors;
 		lastval = lastval + 2;
 
-		
-
 		RevolutionCheck(rotors, 2);
 
 		// letter being converted from ascii to a number
@@ -122,20 +120,9 @@ public:
 	}
 	char DecryptMenu(Rotor* rotors, PlugboardConfiguration& plugboard, char letter)
 	{
-		
 		Rotor* lastval = rotors;
 		lastval = lastval + 2;
-		
-		
-		//checking rotor values
-		//for (Rotor* newVal = rotors; newVal != lastval; newVal++)
-		//{
-		//	std::cout << newVal->GetRotorRevolutionPositon() << std::endl;
-		//}
-
-		//return 'a';
-		
-		
+			
 		RevolutionCheck(rotors, 2);
 
 		int numberresult = letter - 97;
@@ -150,9 +137,7 @@ public:
 		numberresult = plugboard.GetPlugboardConfigurationsVals(numberresult, true);
 
 		numberresult = numberresult - 97;
-
-
-		
+	
 		return char(numberresult + 97);
 	}
 
