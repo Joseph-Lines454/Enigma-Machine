@@ -32,7 +32,7 @@ position. Input a number between 1 and 26 to do so for each rotor. Now type the 
 To decrypt a letter click the encrypt button and repeat the steps listed above.
 
 
-##Setup
+## Setup
 
 DLL files from the SFML bin folder need to be added to the x64 debug folder.
 
