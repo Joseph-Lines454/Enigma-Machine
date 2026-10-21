@@ -12,7 +12,7 @@ class Rotor
 {
 private:
 	std::vector<int> rotorOut;
-	int revolutionPositon = 0;
+	int revolutionPositon = 2;
 	int rotorTitle = 0;
 	std::vector<sf::Text> textUpdate;
 	std::vector<sf::RectangleShape> backgroundUpdate;

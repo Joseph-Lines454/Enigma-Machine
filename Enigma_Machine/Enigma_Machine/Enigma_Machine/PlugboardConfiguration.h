@@ -20,7 +20,7 @@ private:
 	char quit = ' ';
 
 	char plugboardSettings[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
-	char plugboardSettingsOrigonal[26] = { 'r','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
+	char plugboardSettingsOrigonal[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 
 	struct Lines {
 		sf::RectangleShape line;
