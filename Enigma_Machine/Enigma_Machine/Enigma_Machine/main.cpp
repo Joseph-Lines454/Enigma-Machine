@@ -218,6 +218,7 @@ private:
 		for (size_t i = 0; i < setup.GetSlots().size(); ++i)
 		{
 			window.draw(setup.GetSlots()[i]->sprite);
+			window.draw(setup.GetSlots()[i]->textoutput);
 		}
 		window.display();
 	}
@@ -270,20 +271,8 @@ public:
 		textDisplayIns.setString(instructions.ReturnString());
 		textDisplayIns.setPosition(sf::Vector2(305.0f,20.0f));
 		textDisplayIns.setFillColor(sf::Color::White);
-		
 		textDisplayIns.setCharacterSize(15);
 
-		/*
-		Button setup("Setup", { 500.f,10.f }, "Text");
-		sf::Texture textureSetup("white.jpg", false, sf::IntRect({ 100,300 }, { 80,40 }));
-		sf::Sprite spriteSetup(textureSetup);
-		sf::Text textDisplay3(font);
-		textDisplay3.setString(setup.ReturnString());
-		spriteSetup.setPosition(setup.GetButtonPosition());
-		textDisplay3.setPosition(setup.GetButtonPosition());
-		textDisplay3.setFillColor(sf::Color{ 51,255,51 });
-		textDisplay3.setCharacterSize(15);
-		*/
 		sf::Text setupCMDTEXT(font);
 		sf::RectangleShape setupCMD(sf::Vector2(90.f, 40.f));
 		setupCMD.setPosition(sf::Vector2f(500.f, 10.f));
@@ -356,6 +345,8 @@ public:
 							
 							plugboard.SetupPlugboard();
 							Setup.SetupRotors(firstval);
+							//for the GUI front end
+							Setup.AssignRotors(firstval);
 						}
 						
 						//Setup the enigma machine
@@ -367,6 +358,9 @@ public:
 							plugboard.PlugboardSettings();
 							Setup.RotorSet(firstval, 3);
 							Setup.RotorSet(firstval);
+							//for the GUI front end
+							Setup.AssignRotors(firstval);
+							UpdateWindow(window, instructionsRec, setupCMD, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, setupCMDTEXT, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard, background, rect, Setup);
 						}
 						// switches to encrypt/decrypt
 						else if (mousePress->button == sf::Mouse::Button::Left && encryptRec.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
@@ -394,7 +388,9 @@ public:
 						{
 							if (keyPress->scancode == keyboard[i])
 							{
-								
+							
+
+
 								//vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
 								vectorKeyBoard[i].setRadius(25.f);
 								window.clear();
@@ -411,7 +407,7 @@ public:
 								{
 									int pos = newEnigma.EncryptMenu(rotorValues, plugboard, static_cast<char>(i + 97)) - 97;
 									std::cout << char(pos + 97) << std::endl;
-
+									Setup.UpdateText();
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.display();
@@ -428,17 +424,20 @@ public:
 									//plugboard?
 
 									int pos = newEnigma.DecryptMenu(rotorValues, plugboard, static_cast<char>(i + 97)) - 97;
+									// call update frontendrevoltion here?
+									Setup.UpdateText();
 									std::cout << char(pos + 97) << std::endl;
 									vector[pos].setFillColor(sf::Color(226, 203, 40));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, instructionsRec, setupCMD, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, setupCMDTEXT, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+
+									UpdateWindow(window, instructionsRec, setupCMD, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, setupCMDTEXT, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard, background, rect, Setup);
 
 									Sleep(1000);
 									vector[pos].setFillColor(sf::Color(18, 16, 12));
 									window.draw(vector[pos]);
 									window.clear();
-									UpdateWindow(window, instructionsRec, setupCMD, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, setupCMDTEXT, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard,background,rect,Setup);
+									UpdateWindow(window, instructionsRec, setupCMD, setupGUITEXT, setupGUI, encryptRec, textDisplayEnig, textDisplayIns, setupCMDTEXT, textDisplay4, vector, vectorKeyBoard, textDisplay, textDisplayKeyBoard, background, rect, Setup);
 								}
 								break;
 							}

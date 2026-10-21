@@ -16,21 +16,26 @@ class RotorSetup
 
 
 private:
-
 	struct Slots {
 		int index;
 		//we need to set positions as well allowing for slots to be added to the program.
 		sf::Texture texture;
 		sf::Sprite sprite;
 		Rotor* rotorAssigned;
+		sf::Font font;
+		sf::Text textoutput{font,"1",20};
 		Slots(int index) : index(index), texture("white.jpg"),sprite(texture)
 		{
 			this->index = index;
+			this->font.openFromFile("Movistar Text Regular.ttf");
+			this->textoutput.setFillColor(sf::Color::White);
+			
+			this->textoutput.setCharacterSize(24);
 		}
-		void UpdateRotor(Rotor* rotorVal)
+		void UpdateRotorPostion()
 		{
-
-			this->rotorAssigned = rotorVal;
+			// this sets the rotor revolution as a string for each of the rotors.
+			textoutput.setString(std::to_string(this->rotorAssigned->GetRotorRevolutionPositon()));
 		}
 	};
 
@@ -57,14 +62,6 @@ private:
 			}
 		}
 		int count = 1;
-
-		/*
-		for (Rotor* i = copy; i <= End; i++)
-		{
-			std::cout << "Rotor number: " << i->GetRotorTitle() << "is now:" << i->GetPositionGUI() << std::endl;
-
-		}*/
-
 	}
 
 
@@ -203,10 +200,7 @@ public:
 		return slots;
 	}
 
-	//This will show the position to the users on the actual Enigma Machine
-
-
-	//This will show the current letters when not on the current screen
+	//Setting up the slots for the front end
 	void FrontEndSetup()
 	{
 		//we need to draw each slot and assign a numerical value to each
@@ -214,12 +208,40 @@ public:
 		slots.push_back(std::make_unique<Slots>(2));
 		slots.push_back(std::make_unique<Slots>(3));
 
-		slots[0]->sprite.setPosition({ 240.f,100.f });
+		slots[2]->sprite.setPosition({ 240.f,100.f });
 		slots[1]->sprite.setPosition({ 340.f,100.f });
-		slots[2]->sprite.setPosition({ 440.f,100.f });
-		slots[0]->sprite.setScale({ 80.0f / slots[0]->texture.getSize().x,130.0f / slots[0]->texture.getSize().y});
-		slots[1]->sprite.setScale({ 80.0f / slots[1]->texture.getSize().x,130.0f / slots[1]->texture.getSize().y });
-		slots[2]->sprite.setScale({ 80.0f / slots[2]->texture.getSize().x,130.0f / slots[2]->texture.getSize().y });
+		slots[0]->sprite.setPosition({ 440.f,100.f });
+		slots[2]->textoutput.setPosition({ 275.f,125.f });
+		slots[1]->textoutput.setPosition({ 375.f,125.f });
+		slots[0]->textoutput.setPosition({ 475.f,125.f });
+		slots[0]->sprite.setScale({ 80.0f / slots[0]->texture.getSize().x,80.0f / slots[0]->texture.getSize().y});
+		slots[1]->sprite.setScale({ 80.0f / slots[1]->texture.getSize().x,80.0f / slots[1]->texture.getSize().y });
+		slots[2]->sprite.setScale({ 80.0f / slots[2]->texture.getSize().x,80.0f / slots[2]->texture.getSize().y });
+		slots[0]->sprite.setColor(sf::Color{ 43,40,38 });
+		slots[1]->sprite.setColor(sf::Color{ 43,40,38 });
+		slots[2]->sprite.setColor(sf::Color{ 43,40,38 });
+		
+		
+
+	}
+	// put a reference to each pointer in each of the slots then dereference and get the revoltion position
+	void AssignRotors(Rotor* rotors)
+	{
+		//setting each of the rotors with the actual rotor value - aim is to show the revolution position on the homepage of the machine
+		Rotor* startPointer = rotors;
+		for (int i = 0; i < slots.size(); i++)
+		{
+			slots[i]->rotorAssigned = startPointer;
+			slots[i]->UpdateRotorPostion();
+			startPointer++;
+		}
+	}
+	void UpdateText()
+	{
+		for (int i = 0; i < slots.size(); i++)
+		{
+			slots[i]->UpdateRotorPostion();
+		}
 	}
 
 	//We make it so that the user can assign each rotor to a slot, we can cut out this old Command Line code!
@@ -354,7 +376,6 @@ public:
 						rotor2Select = false;
 						values[1].SetPositionGUI(static_cast<int>(keyinput->unicode - U'0'));
 						values[1].SetRotorTitle(2);
-						// THIS CODE NEEDS TO BE REVIEWED - THERE COULD BE AN ISSUE REGARDING IF THE CMD DOES NOT MATCH THE GUI
 						values[1].SetRotorValues(*VectorPointer[1]);
 						std::cout << values[1].GetPositionGUI() << std::endl;
 					}
