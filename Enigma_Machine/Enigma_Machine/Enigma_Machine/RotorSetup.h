@@ -102,26 +102,26 @@ private:
 		else if ((rotorInput1.getString() == rotorInput2.getString()) && (rotorInput1.getString() != "" && rotorInput2.getString() != ""))
 		{
 			rotortextbox1.setFillColor(sf::Color::Red);
-			rotortextbox3.setFillColor(sf::Color::White);
+			rotortextbox3.setFillColor(sf::Color{ 43,40,38 });
 			rotortextbox2.setFillColor(sf::Color::Red);
 		}
 		else if ((rotorInput2.getString() == rotorInput3.getString()) && (rotorInput2.getString() != "" && rotorInput3.getString() != ""))
 		{
-			rotortextbox1.setFillColor(sf::Color::White);
+			rotortextbox1.setFillColor(sf::Color{ 43,40,38 });
 			rotortextbox2.setFillColor(sf::Color::Red);
 			rotortextbox3.setFillColor(sf::Color::Red);
 		}
 		else if ((rotorInput1.getString() == rotorInput3.getString()) && (rotorInput1.getString() != "" && rotorInput3.getString() != ""))
 		{
 			rotortextbox1.setFillColor(sf::Color::Red);
-			rotortextbox2.setFillColor(sf::Color::White);
+			rotortextbox2.setFillColor(sf::Color{ 43,40,38 });
 			rotortextbox3.setFillColor(sf::Color::Red);
 		}
 		else
 		{
-			rotortextbox1.setFillColor(sf::Color::White);
-			rotortextbox2.setFillColor(sf::Color::White);
-			rotortextbox3.setFillColor(sf::Color::White);
+			rotortextbox1.setFillColor(sf::Color{ 43,40,38 });
+			rotortextbox2.setFillColor(sf::Color{ 43,40,38 });
+			rotortextbox3.setFillColor(sf::Color{ 43,40,38 });
 		}
 	}
 
@@ -192,8 +192,6 @@ public:
 			std::cout << "Rotor has been set to position " << i->GetRotorRevolutionPositon() << std::endl;
 
 		}
-
-
 	}
 
 	// it makes sensse to put the rotor code in here so the slots which result in the rotor being dragged.
@@ -251,37 +249,39 @@ public:
 		sf::Text rotorInput1(font);
 		rotortextbox1.setSize({ 50.f, 50.f });
 		rotortextbox1.setPosition({ 240.f,380.f });
-		rotortextbox1.setFillColor(sf::Color::White);
-		rotorInput1.setPosition({240.f,380.f });
+		rotortextbox1.setFillColor(sf::Color{ 43,40,38 });
+		rotorInput1.setPosition({260.f,395.f });
 		rotorInput1.setCharacterSize(14);
-		rotorInput1.setFillColor(sf::Color::Black);
+		rotorInput1.setFillColor(sf::Color::White);
 
 		sf::RectangleShape rotortextbox2;
 		sf::Text rotorInput2(font);
 		rotortextbox2.setSize({ 50.f, 50.f });
-		rotortextbox2.setPosition({ 340.f,380.f });
-		rotortextbox2.setFillColor(sf::Color::White);
-		rotorInput2.setPosition({ 340.f,380.f });
+		rotortextbox2.setPosition({ 360.f,380.f });
+		rotortextbox2.setFillColor(sf::Color{ 43,40,38 });
+		rotorInput2.setPosition({ 380.f,395.f });
 		rotorInput2.setCharacterSize(14);
-		rotorInput2.setFillColor(sf::Color::Black);
+		rotorInput2.setFillColor(sf::Color::White);
 
 		sf::RectangleShape rotortextbox3;
 		sf::Text rotorInput3(font);
 		rotortextbox3.setSize({ 50.f, 50.f });
-		rotortextbox3.setPosition({ 440.f,380.f });
-		rotortextbox3.setFillColor(sf::Color::White);
-		rotorInput3.setPosition({ 440.f,380.f });
+		rotortextbox3.setPosition({ 480.f,380.f });
+		rotortextbox3.setFillColor(sf::Color{ 43,40,38 });
+		rotorInput3.setPosition({ 500.f,395.f });
 		rotorInput3.setCharacterSize(14);
-		rotorInput3.setFillColor(sf::Color::Black);
+		rotorInput3.setFillColor(sf::Color::White);
+
 
 		sf::RectangleShape button;
 		sf::Text buttonText(font);
 		button.setSize({ 90.f, 50.f });
 		button.setPosition({ 600.f,500.f });
-		button.setFillColor(sf::Color::White);
-		buttonText.setPosition({ 600.f,500.f });
-		buttonText.setCharacterSize(14);
-		buttonText.setFillColor(sf::Color::Black);
+		button.setFillColor(sf::Color{ 43,40,38 });
+		buttonText.setOutlineColor(sf::Color{ 212,175,55 });
+		buttonText.setPosition({ 620.f,510.f });
+		buttonText.setCharacterSize(16);
+		buttonText.setFillColor(sf::Color::White);
 		buttonText.setString("Next");
 
 		bool rotor1Select = false;

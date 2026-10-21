@@ -137,7 +137,6 @@ public:
 		numberresult = plugboard.GetPlugboardConfigurationsVals(numberresult, true);
 
 		numberresult = numberresult - 97;
-	
 		return char(numberresult + 97);
 	}
 
