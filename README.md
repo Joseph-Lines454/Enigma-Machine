@@ -4,7 +4,7 @@
 <img width="800" height="1022" alt="Enigma_Machine" src="https://github.com/user-attachments/assets/0c4ff7f1-013e-4482-abbc-a5b0178b3654" />
 
 
-##Description
+## Description
 
 This project aims to replicate an enigma machine. Users are able to configure the plugboard, rotor order as well as rotor positions.
 Users are also able to encrypt/decrypt messages once the configurations have been applied.
