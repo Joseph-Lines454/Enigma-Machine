@@ -200,6 +200,13 @@ public:
 		return slots;
 	}
 
+	void RemoveSlots()
+	{
+		//remove all rotors in current slots and reset the slot states
+		slots.clear();
+		FrontEndSetup();
+	}
+
 	//Setting up the slots for the front end
 	void FrontEndSetup()
 	{

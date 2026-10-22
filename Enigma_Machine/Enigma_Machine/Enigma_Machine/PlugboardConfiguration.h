@@ -7,6 +7,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/Audio.hpp>
 #include <algorithm>
+#include <string.h>
 
 //configuraiton of the plugboard
 class PlugboardConfiguration
@@ -185,6 +186,21 @@ public:
 		}
 		return 0;
 	}
+	void ResetPlugboardSettings()
+	{
+		//reset the line values
+		LineValues.clear();
+		noRenderList.clear();
+		//copying the new settings to the plugboard settings
+		for (int i = 0; i < sizeof(plugboardSettings) / sizeof(char); i++)
+		{
+			plugboardSettings[i] = plugboardSettingsOrigonal[i];
+
+		}
+
+		PlugboardConfigurationsPrint(plugboardSettings);
+
+	}
 	// swapping mechanism
 	void LettersSwap(char letter1, char letter2, char* plugboardSettings, int arraySize)
 	{
@@ -287,9 +303,6 @@ public:
 		char* plugboardsettingstemp = plugboardSettings;
 
 		int size = sizeof(plugboardSettings) / sizeof(plugboardSettings[0]);
-
-
-
 
 		for (int i = 0; i < LineValues.size(); i++)
 		{

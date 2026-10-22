@@ -356,10 +356,13 @@ public:
 						else if (mousePress->button == sf::Mouse::Button::Left && resetMachineState.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))))
 						{
 							//remove plugboard settings
-							//remove remove rotors in slots
-							//reset rotor positions - pointer
-							
-							firstval = rotorValues;
+							plugboard.ResetPlugboardSettings();
+							//remove rotors currently in slots
+							Setup.RemoveSlots();
+							//Deleting old rotor values and initalizing 3 new rotor values
+							delete[] rotorValues;
+							rotorValues = new Rotor[3];
+							rotorValues = firstval;
 
 						}
 
@@ -413,9 +416,6 @@ public:
 						{
 							if (keyPress->scancode == keyboard[i])
 							{
-							
-
-
 								//vectorKeyBoard[i].setFillColor(sf::Color(105, 105, 105));
 								vectorKeyBoard[i].setRadius(25.f);
 								window.clear();
