@@ -362,7 +362,7 @@ public:
 							//Deleting old rotor values and initalizing 3 new rotor values
 							delete[] rotorValues;
 							rotorValues = new Rotor[3];
-							rotorValues = firstval;
+							firstval = rotorValues;
 
 						}
 
