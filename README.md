@@ -42,6 +42,4 @@ Paste them into the Enigma_Machine\Enigma_Machine\Enigma_Machine\x64\Debug folde
 
 ## Work still needing to be done
 
-Currently to reset the machine, the user needs to restart the program. A reset machine button is currently in progress.
-When trying to setup the machine after already setting it up a error is produced.
 Plugboard letter highlighting is slightly buggy, this needs to be fixed.
